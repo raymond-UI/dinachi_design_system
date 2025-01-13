@@ -183,7 +183,7 @@ const ListItemContent = React.forwardRef<HTMLDivElement, ListItemContentProps>(
     return (
       <Wrapper
         ref={ref}
-        className={cn("space-x-1 flex flex-grow truncate", className)}
+        className={cn(" flex flex-grow truncate", className)}
         {...props}
       >
         {children}
@@ -290,11 +290,11 @@ const ListGroupTitle = React.forwardRef<HTMLDivElement, ListGroupTitleProps>(
         {...props}
       >
         {icon && (
-          <span
+          <div
             className={`${sizeClasses[size].icon} flex items-center justify-center`}
           >
             {icon}
-          </span>
+          </div>
         )}{" "}
         {/* Apply icon size */}
         <span className={sizeClasses[size].text}>{props.children}</span>{" "}

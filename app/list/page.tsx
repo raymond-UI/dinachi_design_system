@@ -1,5 +1,5 @@
-"use client"
-import React, { useState } from 'react'
+"use client";
+import React, { useState } from "react";
 import {
   List,
   ListItem,
@@ -8,9 +8,9 @@ import {
   ListItemAction,
   ListGroup,
   ListGroupTitle,
-} from '@/components/custom/list'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+} from "@/components/custom/list";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Check,
   Star,
@@ -32,35 +32,46 @@ import {
   Users,
   InboxIcon,
   ReceiptIcon,
-} from 'lucide-react'
-import AuditLog from './(Usage examples)/audit-logs'
-import PermissionManagement from './(Usage examples)/permission-management'
-import ResourceAllocation from './(Usage examples)/resource-allocation'
-import SystemConfig from './(Usage examples)/system-config'
-import UserManagement from './(Usage examples)/user-management'
+} from "lucide-react";
+import AuditLog from "./(Usage examples)/audit-logs";
+import PermissionManagement from "./(Usage examples)/permission-management";
+import ResourceAllocation from "./(Usage examples)/resource-allocation";
+import SystemConfig from "./(Usage examples)/system-config";
+import UserManagement from "./(Usage examples)/user-management";
+import AuditSystem from "./(Usage examples)/audit-system";
+import ComplexPermissions from "./(Usage examples)/complex-permissions";
+import ComplianceTracking from "./(Usage examples)/compliance-tracking";
+import MultiTenantInterface from "./(Usage examples)/multi-tenant";
+import ResourceManagement from "./(Usage examples)/resource-management";
 
 const ListDemo = () => {
-  const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const toggleSelection = (id: string) => {
-    setSelectedItems(prev =>
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-    )
-  }
+    setSelectedItems((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
 
   return (
-    <div className="w-full max-w-3xl space-y-8 p-6">
+    <div className="w-full max-w-3xl space-y-8 p-1">
       {/* Basic List with Groups */}
       <section>
         <h2 className="mb-4 text-lg font-semibold">Grouped List</h2>
         <List variant="bordered" size="md">
-          <ListGroup >
-            <ListGroupTitle variant="primary" icon={<InboxIcon className=''/>} size='sm'>Inbox</ListGroupTitle>
+          <ListGroup>
+            <ListGroupTitle
+              variant="primary"
+              icon={<InboxIcon className="" />}
+              size="sm"
+            >
+              Inbox
+            </ListGroupTitle>
             <ListItem>
               <ListItemIcon>
                 <Inbox className="h-4 w-4" />
               </ListItemIcon>
-              <ListItemContent >Primary</ListItemContent>
+              <ListItemContent>Primary</ListItemContent>
               <ListItemAction>
                 <Badge>23</Badge>
               </ListItemAction>
@@ -94,13 +105,15 @@ const ListDemo = () => {
       {/* Interactive Grouped List */}
       <section>
         <h2 className="mb-4 text-lg font-semibold">Interactive Grouped List</h2>
-        <List  size="md" listRole="listbox" isInteractive>
-          <ListGroup variant="spaced" > 
-            <ListGroupTitle icon={<ReceiptIcon />} size='lg'>Recent</ListGroupTitle>
+        <List size="md" listRole="listbox" isInteractive>
+          <ListGroup variant="spaced">
+            <ListGroupTitle icon={<ReceiptIcon />} size="lg">
+              Recent
+            </ListGroupTitle>
             {[
-              { id: 'today', icon: Clock, label: 'Today' },
-              { id: 'calendar', icon: Calendar, label: 'Calendar' },
-              { id: 'archive', icon: Archive, label: 'Archive' },
+              { id: "today", icon: Clock, label: "Today" },
+              { id: "calendar", icon: Calendar, label: "Calendar" },
+              { id: "archive", icon: Archive, label: "Archive" },
             ].map((item) => (
               <ListItem
                 key={item.id}
@@ -124,9 +137,9 @@ const ListDemo = () => {
           <ListGroup variant="spaced">
             <ListGroupTitle>Folders</ListGroupTitle>
             {[
-              { id: 'documents', icon: FileText, label: 'Documents' },
-              { id: 'projects', icon: FolderClosed, label: 'Projects' },
-              { id: 'settings', icon: Settings, label: 'Settings' },
+              { id: "documents", icon: FileText, label: "Documents" },
+              { id: "projects", icon: FolderClosed, label: "Projects" },
+              { id: "settings", icon: Settings, label: "Settings" },
             ].map((item) => (
               <ListItem
                 key={item.id}
@@ -151,14 +164,34 @@ const ListDemo = () => {
 
       {/* Complex List with Groups and Actions */}
       <section>
-        <h2 className="mb-4 text-lg font-semibold">Complex Grouped List with Actions</h2>
+        <h2 className="mb-4 text-lg font-semibold">
+          Complex Grouped List with Actions
+        </h2>
         <List variant="bordered" size="lg">
           <ListGroup>
             <ListGroupTitle>Priority Tasks</ListGroupTitle>
             {[
-              { id: 'high', icon: Flag, label: 'High Priority', count: 3, color: 'text-red-500' },
-              { id: 'medium', icon: Flag, label: 'Medium Priority', count: 5, color: 'text-yellow-500' },
-              { id: 'low', icon: Flag, label: 'Low Priority', count: 8, color: 'text-green-500' },
+              {
+                id: "high",
+                icon: Flag,
+                label: "High Priority",
+                count: 3,
+                color: "text-red-500",
+              },
+              {
+                id: "medium",
+                icon: Flag,
+                label: "Medium Priority",
+                count: 5,
+                color: "text-yellow-500",
+              },
+              {
+                id: "low",
+                icon: Flag,
+                label: "Low Priority",
+                count: 8,
+                color: "text-green-500",
+              },
             ].map((item) => (
               <ListItem key={item.id} className="group">
                 <ListItemIcon className={item.color}>
@@ -174,7 +207,11 @@ const ListDemo = () => {
                   <Button size="sm" variant="ghost">
                     <Plus className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="ghost" className="text-destructive">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive"
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </ListItemAction>
@@ -209,7 +246,9 @@ const ListDemo = () => {
           </ListGroup>
 
           <ListGroup className="flex-row space-x-2">
-            <ListGroupTitle className="flex items-center">Tools:</ListGroupTitle>
+            <ListGroupTitle className="flex items-center">
+              Tools:
+            </ListGroupTitle>
             <ListItem variant="hoverable" className="inline-flex">
               <ListItemIcon>
                 <Settings className="h-4 w-4" />
@@ -233,9 +272,16 @@ const ListDemo = () => {
         <SystemConfig />
         <UserManagement />
       </section>
+
+      <section className="flex flex-col gap-4">
+        <AuditSystem />
+        <ComplexPermissions />
+        <ComplianceTracking />
+        <MultiTenantInterface />
+        <ResourceManagement />
+      </section>
     </div>
+  );
+};
 
-  )
-}
-
-export default ListDemo
+export default ListDemo;
