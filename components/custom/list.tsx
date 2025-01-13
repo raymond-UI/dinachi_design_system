@@ -24,7 +24,6 @@ const listVariants = cva("w-full", {
       default: "space-y-3",
       bordered:
         "rounded-lg border bg-card text-card-foreground shadow-sm divide-y divide-border",
-      hoverable: "space-y-3",
     },
     size: {
       default: "",
@@ -41,14 +40,14 @@ const listVariants = cva("w-full", {
 
 // Enhanced list item variants with improved interaction states
 const listItemVariants = cva(
-  "flex items-center justify-between w-full p-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  "flex items-center justify-between w-full text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "",
-        bordered: "py-2",
+        default: "mb-2 last:mb-0",
+        bordered: "py-2 border-b border-border last:border-none",
         hoverable:
-          "hover:bg-accent focus:outline focus:outline-offset-1 focus:outline-foreground cursor-pointer hover:border hover:text-accent-foreground rounded-md",
+          "transition-colors duration-200 ease-in-out hover:bg-accent focus:outline focus:outline-offset-1 focus:outline-foreground cursor-pointer  rounded-md p-1",
       },
     },
     defaultVariants: {
@@ -158,22 +157,40 @@ const ListItemIcon = React.forwardRef<
   <div
     ref={ref}
     aria-hidden={ariaHidden}
-    className={cn("flex items-center justify-start mr-2 h-4 w-4 shrink-0", className)}
+    className={cn(
+      "flex items-center justify-start mr-2 h-4 w-4 shrink-0",
+      className
+    )}
     {...props}
   />
 ));
 ListItemIcon.displayName = "ListItemIcon";
 
-const ListItemContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("space-x-1 flex flex-grow truncate", className)}
-    {...props}
-  />
-));
+interface ListItemContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+const ListItemContent = React.forwardRef<HTMLDivElement, ListItemContentProps>(
+  ({ children, className, ...props }, ref) => {
+    // Check if the children are a plain string or an array of strings
+    const isSimpleText = React.Children.toArray(children).every(
+      (child) => typeof child === "string"
+    );
+
+    // Choose the appropriate element
+    const Wrapper = isSimpleText ? "p" : "div";
+
+    return (
+      <Wrapper
+        ref={ref}
+        className={cn("space-x-1 flex flex-grow truncate", className)}
+        {...props}
+      >
+        {children}
+      </Wrapper>
+    );
+  }
+);
 ListItemContent.displayName = "ListItemContent";
 
 const ListItemAction = React.forwardRef<
@@ -191,7 +208,7 @@ ListItemAction.displayName = "ListItemAction";
 const listGroupVariants = cva("flex flex-col", {
   variants: {
     variant: {
-      default: "items-start space-y-1",
+      default: "items-start",
       compact: "items-start",
       spaced: "items-start space-y-2",
     },
@@ -265,11 +282,23 @@ const ListGroupTitle = React.forwardRef<HTMLDivElement, ListGroupTitleProps>(
     return (
       <div
         ref={ref}
-        className={cn("flex items-center justify-center space-x-1 ", listGroupTitleVariants({ variant }), className)}
+        className={cn(
+          "flex items-center justify-center space-x-1 ",
+          listGroupTitleVariants({ variant }),
+          className
+        )}
         {...props}
       >
-        {icon && <span className={`${sizeClasses[size].icon} flex items-center justify-center`}>{icon}</span>} {/* Apply icon size */}
-        <span className={sizeClasses[size].text}>{props.children}</span> {/* Apply text size */}
+        {icon && (
+          <span
+            className={`${sizeClasses[size].icon} flex items-center justify-center`}
+          >
+            {icon}
+          </span>
+        )}{" "}
+        {/* Apply icon size */}
+        <span className={sizeClasses[size].text}>{props.children}</span>{" "}
+        {/* Apply text size */}
       </div>
     );
   }

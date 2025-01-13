@@ -37,6 +37,7 @@ import AuditLog from './(Usage examples)/audit-logs'
 import PermissionManagement from './(Usage examples)/permission-management'
 import ResourceAllocation from './(Usage examples)/resource-allocation'
 import SystemConfig from './(Usage examples)/system-config'
+import UserManagement from './(Usage examples)/user-management'
 
 const ListDemo = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([])
@@ -59,7 +60,7 @@ const ListDemo = () => {
               <ListItemIcon>
                 <Inbox className="h-4 w-4" />
               </ListItemIcon>
-              <ListItemContent className='bg-blue-500'>Primary</ListItemContent>
+              <ListItemContent >Primary</ListItemContent>
               <ListItemAction>
                 <Badge>23</Badge>
               </ListItemAction>
@@ -93,7 +94,7 @@ const ListDemo = () => {
       {/* Interactive Grouped List */}
       <section>
         <h2 className="mb-4 text-lg font-semibold">Interactive Grouped List</h2>
-        <List variant="hoverable" size="md" listRole="listbox" isInteractive>
+        <List  size="md" listRole="listbox" isInteractive>
           <ListGroup variant="spaced" > 
             <ListGroupTitle icon={<ReceiptIcon />} size='lg'>Recent</ListGroupTitle>
             {[
@@ -189,7 +190,6 @@ const ListDemo = () => {
         <List
           orientation="horizontal"
           className="flex-row space-x-4 space-y-0"
-          variant="hoverable"
           size="lg"
         >
           <ListGroup className="flex-row space-x-2">
@@ -231,6 +231,7 @@ const ListDemo = () => {
         <PermissionManagement />
         <ResourceAllocation />
         <SystemConfig />
+        <UserManagement />
       </section>
     </div>
 

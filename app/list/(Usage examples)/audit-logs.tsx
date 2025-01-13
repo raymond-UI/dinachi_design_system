@@ -45,7 +45,7 @@ export default function AuditLog() {
         <ListGroup >
           <ListGroupTitle icon={<Activity />}>Recent Activities</ListGroupTitle>
           {auditLogs.map((log) => (
-            <ListItem key={log.id}>
+            <ListItem key={log.id} variant={"bordered"}>
               <ListItemContent className="space-x-1">
                 <div className="font-medium">{log.action}</div>
                 <div className="text-sm text-muted-foreground">

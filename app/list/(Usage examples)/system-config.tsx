@@ -22,11 +22,11 @@ export default function SystemConfig() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">System Configuration</h1>
-      <List>
+      <List variant={"bordered"}>
         <ListGroup>
           <ListGroupTitle icon={<Settings />}>Configuration</ListGroupTitle>
           {configs.map(config => (
-            <ListItem key={config.id}>
+            <ListItem key={config.id} variant={"hoverable"}>
               <ListItemContent>{config.name}</ListItemContent>
               <ListItemAction>
                 <Input 
