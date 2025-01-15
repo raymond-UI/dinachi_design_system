@@ -29,7 +29,7 @@ export default function MultiTenantInterface() {
         <ListGroup>
           <ListGroupTitle icon={<Building />}>Active Tenants</ListGroupTitle>
           {tenants.map(tenant => (
-            <ListItem key={tenant.id}>
+            <ListItem key={tenant.id} size={"md"}>
               <ListItemContent className='flex-col items-start'>
                 <p className="font-medium">{tenant.name}</p>
                 <span className="text-sm text-muted-foreground">Domain: {tenant.customDomain}</span>

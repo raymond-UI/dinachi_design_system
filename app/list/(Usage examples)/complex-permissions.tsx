@@ -49,7 +49,7 @@ export default function ComplexPermissions() {
             ))}
           </ListItem>
           {permissions.map(permission => (
-            <ListItem key={permission.id}>
+            <ListItem key={permission.id} size={"lg"}>
               <ListItemContent>{permission.name}</ListItemContent>
               {roles.map(role => (
                 <ListItemAction key={role.id}>

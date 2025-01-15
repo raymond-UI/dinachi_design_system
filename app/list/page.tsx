@@ -43,6 +43,7 @@ import ComplexPermissions from "./(Usage examples)/complex-permissions";
 import ComplianceTracking from "./(Usage examples)/compliance-tracking";
 import MultiTenantInterface from "./(Usage examples)/multi-tenant";
 import ResourceManagement from "./(Usage examples)/resource-management";
+import MobileMenu from "./(Usage examples)/mobile-menu";
 
 const ListDemo = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -105,7 +106,7 @@ const ListDemo = () => {
       {/* Interactive Grouped List */}
       <section>
         <h2 className="mb-4 text-lg font-semibold">Interactive Grouped List</h2>
-        <List size="md" listRole="listbox" isInteractive>
+        <List listRole="listbox" isInteractive aria-label="Select a label">
           <ListGroup variant="spaced">
             <ListGroupTitle icon={<ReceiptIcon />} size="lg">
               Recent
@@ -279,6 +280,10 @@ const ListDemo = () => {
         <ComplianceTracking />
         <MultiTenantInterface />
         <ResourceManagement />
+      </section>
+
+      <section className="flex flex-col gap-4 border rounded-lg w-min ">
+        <MobileMenu />
       </section>
     </div>
   );

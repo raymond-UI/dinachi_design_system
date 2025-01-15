@@ -30,7 +30,7 @@ export default function ComplianceTracking() {
         <ListGroup>
           <ListGroupTitle icon={<ClipboardCheck />}>Compliance Requirements</ListGroupTitle>
           {complianceItems.map(item => (
-            <ListItem key={item.id}>
+            <ListItem key={item.id} size={"lg"}>
               <ListItemContent>
                 <div className="flex items-center">
                   <item.icon className={`mr-2 h-5 w-5 ${getStatusColor(item.status)}`} />

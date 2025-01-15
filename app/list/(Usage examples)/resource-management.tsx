@@ -24,13 +24,13 @@ export default function ResourceManagement() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 ">
       <h1 className="text-2xl font-bold mb-4">Resource Management System</h1>
-      <List>
+      <List isInteractive={true}>
         <ListGroup>
           <ListGroupTitle>Enterprise Resources</ListGroupTitle>
           {resources.map(resource => (
-            <ListItem key={resource.id}>
+            <ListItem key={resource.id} variant={"hoverable"}>
               <ListItemContent>
                 <div className="flex items-center">
                   <resource.icon className="mr-2 h-5 w-5" />

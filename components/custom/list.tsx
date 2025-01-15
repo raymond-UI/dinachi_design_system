@@ -21,40 +21,18 @@ const ListContext = React.createContext<ListContextValue>({
 const listVariants = cva("w-full", {
   variants: {
     variant: {
-      default: "space-y-3",
+      default: "",
       bordered:
         "rounded-lg border bg-card text-card-foreground shadow-sm divide-y divide-border",
     },
-    size: {
-      default: "",
-      sm: "p-2",
-      md: "p-4",
-      lg: "p-6",
-    },
+
   },
   defaultVariants: {
     variant: "default",
-    size: "default",
   },
 });
 
-// Enhanced list item variants with improved interaction states
-const listItemVariants = cva(
-  "flex items-center justify-between w-full text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
-  {
-    variants: {
-      variant: {
-        default: "mb-2 last:mb-0",
-        bordered: "py-2 border-b border-border last:border-none",
-        hoverable:
-          "transition-colors duration-200 ease-in-out hover:bg-accent focus:outline focus:outline-offset-1 focus:outline-foreground cursor-pointer  rounded-md p-1",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-);
+
 
 interface ListProps
   extends React.HTMLAttributes<HTMLUListElement>,
@@ -69,7 +47,6 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
     {
       className,
       variant,
-      size,
       listRole = "list",
       orientation = "vertical",
       isInteractive = false,
@@ -87,7 +64,7 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
           role={listRole}
           aria-orientation={orientation}
           aria-label={ariaLabel}
-          className={cn(listVariants({ variant, size }), className)}
+          className={cn(listVariants({ variant }), className)}
           {...props}
         />
       </ListContext.Provider>
@@ -95,6 +72,33 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
   }
 );
 List.displayName = "List";
+
+
+// Enhanced list item variants with improved interaction states
+const listItemVariants = cva(
+  "flex items-center justify-between w-full text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "mb-2 last:mb-0",
+        bordered: "py-2 border-b border-border last:border-none",
+        hoverable:
+          "transition-colors duration-200 ease-in-out hover:bg-accent focus:outline focus:outline-offset-1 focus:outline-foreground cursor-pointer  rounded-md p-1 active:text-primary",
+      },
+      size: {
+        default: "",
+        sm: "p-2 text-sm",
+        md: "p-2 text-md",
+        lg: "p-2 text-lg",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
 
 interface ListItemProps
   extends React.HTMLAttributes<HTMLLIElement>,
@@ -104,7 +108,7 @@ interface ListItemProps
 }
 
 const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
-  ({ className, variant, disabled, selected, onClick, ...props }, ref) => {
+  ({ className, variant, size, disabled, selected, onClick, ...props }, ref) => {
     const { listRole, isInteractive } = React.useContext(ListContext);
     const [isFocused, setIsFocused] = React.useState(false);
 
@@ -138,7 +142,7 @@ const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className={cn(
-          listItemVariants({ variant }),
+          listItemVariants({ variant, size  }),
           selected && "bg-accent text-accent-foreground",
           isFocused && "outline-2 outline-offset-2 outline-focus",
           className
