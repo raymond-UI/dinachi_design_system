@@ -11,7 +11,14 @@ export default function ResourceAllocation() {
     { id: 2, name: 'Memory', usage: 80 },
     { id: 3, name: 'Disk Space', usage: 45 },
     { id: 4, name: 'Network', usage: 50 },
-  ])
+  ]);
+
+  const [storageResources, setStorageResources] = useState([
+    { id: 1, name: 'SSD', usage: 70 },
+    { id: 2, name: 'HDD', usage: 30 },
+    { id: 3, name: 'NAS', usage: 20 },
+    { id: 4, name: 'Cloud Storage', usage: 10 },
+  ]);
 
   return (
     <div className="p-4">
@@ -26,7 +33,21 @@ export default function ResourceAllocation() {
                 <span className="text-sm text-muted-foreground">{resource.usage}% used</span>
               </ListItemContent>
               <ListItemAction className="w-48">
-                <Progress value={resource.usage} className="w-full"  aria-label={`Progress for ${resource.name}: ${resource.usage}% used`} />
+                <Progress value={resource.usage} className="w-full" aria-label={`Progress for ${resource.name}: ${resource.usage}% used`} />
+              </ListItemAction>
+            </ListItem>
+          ))}
+        </ListGroup>
+        <ListGroup>
+          <ListGroupTitle icon={<Server />}>Storage Resources</ListGroupTitle>
+          {storageResources.map(resource => (
+            <ListItem key={resource.id}>
+              <ListItemContent>
+                <span className="font-medium">{resource.name}</span>
+                <span className="text-sm text-muted-foreground">{resource.usage}% used</span>
+              </ListItemContent>
+              <ListItemAction className="w-48">
+                <Progress value={resource.usage} className="w-full" aria-label={`Progress for ${resource.name}: ${resource.usage}% used`} />
               </ListItemAction>
             </ListItem>
           ))}

@@ -88,15 +88,15 @@ List.displayName = "List";
 
 // Enhanced list item variants with improved interaction states
 const listItemVariants = cva(
-  "flex items-center justify-between  w-full text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  "flex items-center justify-between  w-full text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded mb-2 last:mb-0",
   {
     variants: {
       variant: {
-        default: "mb-2 last:mb-0",
-        bordered: "py-2 border-b border-border last:border-none",
+        default: "",
+        bordered: "p-2 border border-border last:border-none",
         interactive:
-          "transition-colors duration-200 ease-in-out hover:bg-accent focus:outline focus:outline-offset-1 focus:outline-foreground cursor-pointer  rounded-md p-1 active:text-primary",
-        striped: "odd:bg-muted even:bg-none",
+          "transition-colors duration-200 ease-in-out hover:bg-accent focus:outline focus:outline-offset-1 focus:outline-foreground cursor-pointer active:text-primary",
+        striped: "odd:bg-muted/50 even:bg-none",
         
       },
       size: {
@@ -202,7 +202,7 @@ const ListItemContent = React.forwardRef<HTMLDivElement, ListItemContentProps>(
     return (
       <Wrapper
         ref={ref}
-        className={cn(" flex flex-grow truncate", className)}
+        className={cn(" flex flex-grow truncate gap-1", className)}
         {...props}
       >
         {children}
@@ -237,22 +237,54 @@ const listGroupVariants = cva("flex flex-col", {
   },
 });
 
-export interface ListGroupProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+// Update the props interface to be generic
+interface ListGroupProps
+  extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof listGroupVariants> {
   "aria-label"?: string;
 }
 
-const ListGroup = React.forwardRef<HTMLDivElement, ListGroupProps>(
-  ({ className, variant, "aria-label": ariaLabel, ...props }, ref) => {
+const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
+  ({ className, variant, "aria-label": ariaLabel, children, ...props }, ref) => {
+    const listContext = React.useContext(ListContext);
+    
+    // Separate title and items
+    const childrenArray = React.Children.toArray(children);
+    const titleElement = childrenArray.find(
+      child => React.isValidElement(child) && child.type === ListGroupTitle
+    );
+    const items = childrenArray.filter(
+      child => React.isValidElement(child) && child.type === ListItem
+    );
+    
+    if (listContext.listRole === "list") {
+      return (
+        <li
+          ref={ref as React.Ref<HTMLLIElement>}
+          className="list-none flex flex-col items-start w-full"
+        >
+          {titleElement}
+          <ul 
+            className={cn(" w-full", listGroupVariants({ variant }), className)}
+            aria-label={ariaLabel}
+          >
+            {items}
+          </ul>
+        </li>
+      );
+    }
+
+    // If not inside a List, keep original behavior
     return (
       <div
-        ref={ref}
+        ref={ref as React.Ref<HTMLDivElement>}
         role="group"
         aria-label={ariaLabel}
         className={cn(listGroupVariants({ variant }), className)}
         {...props}
-      />
+      >
+        {children}
+      </div>
     );
   }
 );
