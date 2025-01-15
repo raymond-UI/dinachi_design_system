@@ -18,12 +18,12 @@ export default function UserManagement() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">User Management</h1>
-      <List>
+      <h1 className="text-2xl font-bold mb-4 ">User Management</h1>
+      <List aria-label='User Management List'>
         <ListGroup>
           <ListGroupTitle icon={<UserCircle />}>Users</ListGroupTitle>
           {users.map(user => (
-            <ListItem key={user.id} variant={"hoverable"}>
+            <ListItem key={user.id} variant={"striped"}>
               <ListItemContent>
                 <div className="font-medium">{user.name}</div>
                 <div className="text-sm text-muted-foreground ">{user.email}</div>

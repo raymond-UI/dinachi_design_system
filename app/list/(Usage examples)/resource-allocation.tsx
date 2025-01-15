@@ -16,7 +16,7 @@ export default function ResourceAllocation() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Resource Allocation</h1>
-      <List>
+      <List aria-label='Resource Allocation List'>
         <ListGroup>
           <ListGroupTitle icon={<Server />}>System Resources</ListGroupTitle>
           {resources.map(resource => (
@@ -26,7 +26,7 @@ export default function ResourceAllocation() {
                 <span className="text-sm text-muted-foreground">{resource.usage}% used</span>
               </ListItemContent>
               <ListItemAction className="w-48">
-                <Progress value={resource.usage} className="w-full" />
+                <Progress value={resource.usage} className="w-full"  aria-label={`Progress for ${resource.name}: ${resource.usage}% used`} />
               </ListItemAction>
             </ListItem>
           ))}

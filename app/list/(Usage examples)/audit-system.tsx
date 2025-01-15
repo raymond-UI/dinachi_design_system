@@ -36,7 +36,7 @@ export default function AuditSystem() {
           Filter
         </Button>
       </div>
-      <List>
+      <List aria-label='Audit Logs List'>
         <ListGroup>
           <ListGroupTitle icon={<Activity />}>Audit Logs</ListGroupTitle>
           {filteredLogs.map(log => (

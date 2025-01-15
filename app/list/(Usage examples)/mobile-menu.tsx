@@ -53,7 +53,7 @@ export default function MobileMenu() {
           <List>
             {menuItems.map((item) => (
               <ListItem
-              variant={"hoverable"}
+              variant={"striped"}
                 key={item.id}
                 selected={item.id === selectedMenuItem}
                 onClick={() => setSelectedMenuItem(item.id)}

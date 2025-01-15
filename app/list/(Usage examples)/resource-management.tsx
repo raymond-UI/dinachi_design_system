@@ -30,7 +30,7 @@ export default function ResourceManagement() {
         <ListGroup>
           <ListGroupTitle>Enterprise Resources</ListGroupTitle>
           {resources.map(resource => (
-            <ListItem key={resource.id} variant={"hoverable"}>
+            <ListItem key={resource.id} variant={"striped"}>
               <ListItemContent>
                 <div className="flex items-center">
                   <resource.icon className="mr-2 h-5 w-5" />

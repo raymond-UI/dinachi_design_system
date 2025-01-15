@@ -59,7 +59,7 @@ const ListDemo = () => {
       {/* Basic List with Groups */}
       <section>
         <h2 className="mb-4 text-lg font-semibold">Grouped List</h2>
-        <List variant="bordered" size="md">
+        <List aria-label="Grouped List">
           <ListGroup>
             <ListGroupTitle
               variant="primary"
@@ -118,7 +118,7 @@ const ListDemo = () => {
             ].map((item) => (
               <ListItem
                 key={item.id}
-                variant="hoverable"
+                variant="interactive"
                 selected={selectedItems.includes(item.id)}
                 onClick={() => toggleSelection(item.id)}
               >
@@ -144,7 +144,7 @@ const ListDemo = () => {
             ].map((item) => (
               <ListItem
                 key={item.id}
-                variant="hoverable"
+                variant="interactive"
                 selected={selectedItems.includes(item.id)}
                 onClick={() => toggleSelection(item.id)}
               >
@@ -168,7 +168,7 @@ const ListDemo = () => {
         <h2 className="mb-4 text-lg font-semibold">
           Complex Grouped List with Actions
         </h2>
-        <List variant="bordered" size="lg">
+        <List aria-label="Complex Grouped List with Actions"  >
           <ListGroup>
             <ListGroupTitle>Priority Tasks</ListGroupTitle>
             {[
@@ -225,20 +225,19 @@ const ListDemo = () => {
       {/* Horizontal List with Groups */}
       <section>
         <h2 className="mb-4 text-lg font-semibold">Horizontal Grouped List</h2>
-        <List
+        <List aria-label='Horizontal Grouped List'
           orientation="horizontal"
           className="flex-row space-x-4 space-y-0"
-          size="lg"
-        >
+         >
           <ListGroup className="flex-row space-x-2">
             <ListGroupTitle className="flex items-center">Main:</ListGroupTitle>
-            <ListItem variant="hoverable" className="inline-flex">
+            <ListItem variant="striped" className="inline-flex">
               <ListItemIcon>
                 <Home className="h-4 w-4" />
               </ListItemIcon>
               <ListItemContent>Home</ListItemContent>
             </ListItem>
-            <ListItem variant="hoverable" className="inline-flex">
+            <ListItem variant="striped" className="inline-flex">
               <ListItemIcon>
                 <FileText className="h-4 w-4" />
               </ListItemIcon>
@@ -250,13 +249,13 @@ const ListDemo = () => {
             <ListGroupTitle className="flex items-center">
               Tools:
             </ListGroupTitle>
-            <ListItem variant="hoverable" className="inline-flex">
+            <ListItem variant="striped" className="inline-flex">
               <ListItemIcon>
                 <Settings className="h-4 w-4" />
               </ListItemIcon>
               <ListItemContent>Settings</ListItemContent>
             </ListItem>
-            <ListItem variant="hoverable" className="inline-flex">
+            <ListItem variant="striped" className="inline-flex">
               <ListItemIcon>
                 <Bell className="h-4 w-4" />
               </ListItemIcon>

@@ -84,7 +84,7 @@ const ListGrid = () => {
         {aiTerms.map((term, index) => (
           <ListItem
             key={index}
-            variant="hoverable"
+            variant="striped"
             size={"md"}
             className=" border-dotted border h-full"
           >

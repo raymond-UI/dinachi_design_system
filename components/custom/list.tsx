@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 // Context to share list properties
 interface ListContextValue {
-  variant: "default" | "bordered" | "hoverable" | undefined;
+  variant: "default" | undefined;
   listRole?: "list" | "listbox" | "menu";
   isInteractive?: boolean;
 }
@@ -22,8 +22,6 @@ const listVariants = cva("w-full", {
   variants: {
     variant: {
       default: "",
-      bordered:
-        "rounded-lg border bg-card text-card-foreground shadow-sm divide-y divide-border",
     },
 
   },
@@ -35,10 +33,17 @@ const listVariants = cva("w-full", {
 
 
 interface ListProps
-  extends React.HTMLAttributes<HTMLUListElement>,
+  extends Omit<React.HTMLAttributes<HTMLUListElement>, 'aria-label'>,
     VariantProps<typeof listVariants> {
+  /**
+   * Required ARIA label for the list
+   */
+  'aria-label': string;
+  /** Role of the list element */
   listRole?: "list" | "listbox" | "menu";
+  /** Orientation of the list items */
   orientation?: "horizontal" | "vertical";
+  /** Whether the list items are interactive */
   isInteractive?: boolean;
 }
 
@@ -55,6 +60,14 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
     },
     ref
   ) => {
+    // Only include aria-orientation for listbox and menu roles
+    const ariaProps = listRole === "list" 
+      ? { "aria-label": ariaLabel }
+      : { 
+          "aria-orientation": orientation,
+          "aria-label": ariaLabel
+        };
+
     return (
       <ListContext.Provider
         value={{ variant: variant ?? "default", listRole, isInteractive }}
@@ -62,8 +75,7 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
         <ul
           ref={ref}
           role={listRole}
-          aria-orientation={orientation}
-          aria-label={ariaLabel}
+          {...ariaProps}
           className={cn(listVariants({ variant }), className)}
           {...props}
         />
@@ -76,14 +88,16 @@ List.displayName = "List";
 
 // Enhanced list item variants with improved interaction states
 const listItemVariants = cva(
-  "flex items-center justify-between w-full text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  "flex items-center justify-between  w-full text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         default: "mb-2 last:mb-0",
         bordered: "py-2 border-b border-border last:border-none",
-        hoverable:
+        interactive:
           "transition-colors duration-200 ease-in-out hover:bg-accent focus:outline focus:outline-offset-1 focus:outline-foreground cursor-pointer  rounded-md p-1 active:text-primary",
+        striped: "odd:bg-muted even:bg-none",
+        
       },
       size: {
         default: "",
@@ -105,10 +119,11 @@ interface ListItemProps
     VariantProps<typeof listItemVariants> {
   disabled?: boolean;
   selected?: boolean;
+  index?: number;
 }
 
 const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
-  ({ className, variant, size, disabled, selected, onClick, ...props }, ref) => {
+  ({ className, variant, size, disabled, selected, onClick, index, ...props }, ref) => {
     const { listRole, isInteractive } = React.useContext(ListContext);
     const [isFocused, setIsFocused] = React.useState(false);
 
@@ -142,7 +157,7 @@ const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className={cn(
-          listItemVariants({ variant, size  }),
+          listItemVariants({ variant: variant === 'striped' && (index ?? 0) % 2 === 0 ? 'striped' : variant, size }),
           selected && "bg-accent text-accent-foreground",
           isFocused && "outline-2 outline-offset-2 outline-focus",
           className
