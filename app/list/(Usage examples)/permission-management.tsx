@@ -22,11 +22,11 @@ export default function PermissionManagement() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Permission Management</h1>
-      <List>
+      <List aria-label='Permission Management list '>
         <ListGroup>
           <ListGroupTitle icon={<Lock />}>Permissions</ListGroupTitle>
           {permissions.map(perm => (
-            <ListItem key={perm.id}>
+            <ListItem key={perm.id} variant={'bordered'}>
               <ListItemContent>{perm.name}</ListItemContent>
               <ListItemAction>
                 <Switch 

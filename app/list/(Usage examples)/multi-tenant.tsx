@@ -25,11 +25,11 @@ export default function MultiTenantInterface() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Multi-Tenant Interface</h1>
-      <List>
+      <List aria-label="Multi-Tenant Interface">
         <ListGroup>
           <ListGroupTitle icon={<Building />}>Active Tenants</ListGroupTitle>
           {tenants.map(tenant => (
-            <ListItem key={tenant.id} size={"md"}>
+            <ListItem key={tenant.id} size={"md"} variant={"interactive"}>
               <ListItemContent className='flex-col items-start'>
                 <p className="font-medium">{tenant.name}</p>
                 <span className="text-sm text-muted-foreground">Domain: {tenant.customDomain}</span>

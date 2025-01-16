@@ -9,9 +9,9 @@ import {
   ListGroup,
   ListGroupTitle,
 } from "@/components/custom/list"; // Adjust the import path as necessary
-import { Bot, CloudCog, SquareDashedBottomCode } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "motion/react"
+import { Bot } from "lucide-react";
 
 
 const ListGrid = () => {
@@ -78,13 +78,14 @@ const ListGrid = () => {
       <List
        aria-label="AI Capabilities"
       listRole={"list"}
-        className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-3 h-auto"
+      isInteractive
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 h-auto"
       >
         {aiTerms.map((term, index) => (
           <ListItem
             key={index}
-            variant="striped"
-            size={"md"}
+            variant="interactive"
+            size={"lg"}
             className=" border-dotted border h-full"
           >
             <ListItemIcon>{term.icon}</ListItemIcon>
@@ -92,8 +93,10 @@ const ListGrid = () => {
           </ListItem>
         ))}
       </List>
+
     </div>
   );
 };
 
 export default ListGrid;
+

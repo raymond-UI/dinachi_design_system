@@ -34,7 +34,7 @@ export default function ComplexPermissions() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Complex Permission System</h1>
-      <List>
+      <List aria-label='Complex Permission System list'>
         <ListGroup>
           <ListGroupTitle>Permissions Matrix</ListGroupTitle>
           <ListItem>

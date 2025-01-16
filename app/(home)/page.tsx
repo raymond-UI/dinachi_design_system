@@ -14,14 +14,14 @@ const components = [
     url: "/list",
   },
   {
-    value: "card",
-    label: "Cards",
-    url: "/card",
+    value: "list-grid",
+    label: "List Grid",
+    url: "/list-grid",
   },
   {
-    value: "button",
-    label: "Buttons",
-    url: "/button",
+    value: "grid-list",
+    label: "Grid List",
+    url: "/grid-list",
   },
   {
     value: "input",

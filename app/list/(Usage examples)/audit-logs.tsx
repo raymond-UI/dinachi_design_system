@@ -39,13 +39,13 @@ export default function AuditLog() {
   ];
 
   return (
-    <Card className="p-4">
+    <Card className="p">
       <h1 className="text-2xl font-bold mb-4">Audit Log</h1>
-      <List>
+      <List aria-label="Audit Log" >
         <ListGroup >
           <ListGroupTitle icon={<Activity />}>Recent Activities</ListGroupTitle>
           {auditLogs.map((log) => (
-            <ListItem key={log.id} variant={"bordered"}>
+            <ListItem key={log.id} variant={"bordered"} className="">
               <ListItemContent className="space-x-1">
                 <div className="font-medium">{log.action}</div>
                 <div className="text-sm text-muted-foreground">

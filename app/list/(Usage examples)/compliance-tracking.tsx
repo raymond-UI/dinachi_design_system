@@ -8,6 +8,7 @@ import {
   ListItemAction,
   ListGroup,
   ListGroupTitle,
+  ListItemIcon,
 } from "@/components/custom/list";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -72,15 +73,16 @@ export default function ComplianceTracking() {
             Compliance Requirements
           </ListGroupTitle>
           {complianceItems.map((item) => (
-            <ListItem key={item.id} size={"lg"}>
-              <ListItemContent>
-                <div className="flex items-center">
-                  <item.icon
-                    className={`mr-2 h-5 w-5 ${getStatusColor(item.status)}`}
+            <ListItem key={item.id} size={"md"}>
+                <ListItemIcon>
+                  <item.icon  className={`${getStatusColor(item.status)}`}
                   />
-                  <div>
+                </ListItemIcon>
+                  <ListItemContent>
+                <div className="flex items-center">
+                  <div className="flex items-center gap-1">
                     <div className="font-medium">{item.name}</div>
-                    <div className={`text-sm ${getStatusColor(item.status)}`}>
+                    <div className={`text-sm  flex items-center justify-center ${getStatusColor(item.status)}`}>
                       {item.status}
                     </div>
                   </div>

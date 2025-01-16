@@ -4,47 +4,64 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-// Context to share list properties
+// Enhanced context to include density and layout properties
 interface ListContextValue {
   variant: "default" | undefined;
   listRole?: "list" | "listbox" | "menu";
   isInteractive?: boolean;
+  density?: "compact" | "comfortable" | "default";
+  layout?: "vertical" | "horizontal" | "grid";
 }
 
 const ListContext = React.createContext<ListContextValue>({
   variant: undefined,
   listRole: "list",
   isInteractive: false,
+  density: "default",
+  layout: "vertical",
 });
 
-// Enhanced list variants with better spacing and styling options
+// Enhanced list variants with grid support and density controls
 const listVariants = cva("w-full", {
   variants: {
     variant: {
       default: "",
     },
-
+    layout: {
+      vertical: "flex flex-col",
+      horizontal: "flex flex-row flex-wrap",
+      grid: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4",
+    },
+    density: {
+      compact: "gap-1",
+      comfortable: "gap-4",
+      default: "gap-2",
+    },
+    divider: {
+      none: "",
+      full: "divide-y divide-border",
+      inset: "divide-y divide-border [&>*]:pl-4",
+    },
   },
   defaultVariants: {
     variant: "default",
+    layout: "vertical",
+    density: "default",
+    divider: "none",
   },
 });
-
-
 
 interface ListProps
   extends Omit<React.HTMLAttributes<HTMLUListElement>, 'aria-label'>,
     VariantProps<typeof listVariants> {
-  /**
-   * Required ARIA label for the list
-   */
   'aria-label': string;
-  /** Role of the list element */
   listRole?: "list" | "listbox" | "menu";
-  /** Orientation of the list items */
   orientation?: "horizontal" | "vertical";
-  /** Whether the list items are interactive */
   isInteractive?: boolean;
+  density?: "compact" | "comfortable" | "default";
+  layout?: "vertical" | "horizontal" | "grid";
+  gridColumns?: number;
+  divider?: "none" | "full" | "inset";
 }
 
 const List = React.forwardRef<HTMLUListElement, ListProps>(
@@ -55,12 +72,15 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
       listRole = "list",
       orientation = "vertical",
       isInteractive = false,
+      density = "default",
+      layout = "vertical",
+      gridColumns,
+      divider = "none",
       "aria-label": ariaLabel,
       ...props
     },
     ref
   ) => {
-    // Only include aria-orientation for listbox and menu roles
     const ariaProps = listRole === "list" 
       ? { "aria-label": ariaLabel }
       : { 
@@ -68,15 +88,33 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
           "aria-label": ariaLabel
         };
 
+    // Custom grid columns style if specified
+    const gridStyle = gridColumns
+      ? { 
+          gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))`,
+          display: 'grid'
+        }
+      : {};
+
     return (
       <ListContext.Provider
-        value={{ variant: variant ?? "default", listRole, isInteractive }}
+        value={{ 
+          variant: variant ?? "default", 
+          listRole, 
+          isInteractive,
+          density,
+          layout 
+        }}
       >
         <ul
           ref={ref}
           role={listRole}
           {...ariaProps}
-          className={cn(listVariants({ variant }), className)}
+          className={cn(
+            listVariants({ variant, layout, density, divider }), 
+            className
+          )}
+          style={gridStyle}
           {...props}
         />
       </ListContext.Provider>
@@ -85,19 +123,16 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
 );
 List.displayName = "List";
 
-
-// Enhanced list item variants with improved interaction states
+// Enhanced list item variants with density support
 const listItemVariants = cva(
-  "flex items-center justify-between  w-full text-base transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded mb-2 last:mb-0 px-1",
+  "flex items-center justify-between w-full text-base transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded mb-2 last:mb-0 px-1",
   {
     variants: {
       variant: {
         default: "",
-        bordered: "py-1 px-1 border-b border-dashed last:border-none rounded-none",
-        interactive:
-          "transition-colors duration-200 ease-in-out hover:bg-accent  cursor-pointer active:text-primary",
+        bordered: "py-2 border-b border-border last:border-none rounded-none",
+        interactive: "transition-colors duration-200 ease-in-out hover:bg-accent cursor-pointer active:text-primary",
         striped: "odd:bg-muted/50 even:bg-none",
-        
       },
       size: {
         default: "",
@@ -105,15 +140,19 @@ const listItemVariants = cva(
         md: "p-2 text-lg",
         lg: "p-2 text-xl",
       },
+      density: {
+        compact: "py-1 px-2",
+        comfortable: "py-3 px-4",
+        default: "py-2 px-3",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      density: "default",
     },
   }
 );
-
-const ListItemContext = React.createContext<{ size?: string }>({});
 
 interface ListItemProps
   extends React.HTMLAttributes<HTMLLIElement>,
@@ -121,80 +160,63 @@ interface ListItemProps
   disabled?: boolean;
   selected?: boolean;
   index?: number;
-  size?:  "sm" | "md" | "lg";
 }
 
 const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
-  ({ className, variant, size, disabled, selected, onClick, index, ...props }, ref) => {
-    const { listRole, isInteractive } = React.useContext(ListContext);
+  ({ className, variant, size, density, disabled, selected, onClick, index, ...props }, ref) => {
+    const { listRole, isInteractive, density: contextDensity } = React.useContext(ListContext);
     const [isFocused, setIsFocused] = React.useState(false);
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
       if (disabled) return;
-      if (
-        isInteractive &&
-        onClick &&
-        (event.key === "Enter" || event.key === " ")
-      ) {
+      if (isInteractive && onClick && (event.key === "Enter" || event.key === " ")) {
         event.preventDefault();
         onClick(event as unknown as React.MouseEvent<HTMLLIElement>);
       }
     };
 
     return (
-      <ListItemContext.Provider value={{ size }}>
-        <li
-          ref={ref}
-          role={
-            listRole === "listbox"
-              ? "option"
-              : listRole === "menu"
-              ? "menuitem"
-              : undefined
-          }
-          aria-disabled={disabled}
-          aria-selected={listRole === "listbox" ? selected : undefined}
-          tabIndex={isInteractive && !disabled ? 0 : undefined}
-          onClick={disabled ? undefined : onClick}
-          onKeyDown={handleKeyDown}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          className={cn(
-            listItemVariants({ variant, size }),
-            selected && "bg-primary/5  text-primary",
-            isFocused && "outline-1 outline-offset-1 outline-focus text-primary",
-            className
-          )}
-          {...props}
-        />
-      </ListItemContext.Provider>
-    );
-  }
-);
-
-ListItem.displayName = "ListItem";
-
-const ListItemIcon = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, "aria-hidden": ariaHidden = true, ...props }, ref) => {
-    const { size } = React.useContext(ListItemContext);
-
-    const sizeClasses = {
-      sm: "h-4 w-4",
-      md: "h-5 w-5",
-      lg: "h-6 w-6",
-    };
-
-    return (
-      <div
+      <li
         ref={ref}
-        aria-hidden={ariaHidden}
-        className={cn("flex items-center justify-start mr-2 shrink-0", sizeClasses[size as "sm" | "md" | "lg"] || sizeClasses['md'], className)}
+        role={listRole === "listbox" ? "option" : listRole === "menu" ? "menuitem" : undefined}
+        aria-disabled={disabled}
+        aria-selected={listRole === "listbox" ? selected : undefined}
+        tabIndex={isInteractive && !disabled ? 0 : undefined}
+        onClick={disabled ? undefined : onClick}
+        onKeyDown={handleKeyDown}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        className={cn(
+          listItemVariants({ 
+            variant: variant === 'striped' && (index ?? 0) % 2 === 0 ? 'striped' : variant, 
+            size,
+            density: density || contextDensity 
+          }),
+          selected && "bg-primary/5 text-primary",
+          isFocused && "outline-1 outline-offset-1 outline-focus text-primary",
+          className
+        )}
         {...props}
       />
     );
   }
 );
+ListItem.displayName = "ListItem";
 
+const ListItemIcon = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, "aria-hidden": ariaHidden = true, ...props }, ref) => (
+  <div
+    ref={ref}
+    aria-hidden={ariaHidden}
+    className={cn(
+      "flex items-center justify-start mr-2 h-4 w-4 shrink-0",
+      className
+    )}
+    {...props}
+  />
+));
 ListItemIcon.displayName = "ListItemIcon";
 
 interface ListItemContentProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -203,18 +225,16 @@ interface ListItemContentProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const ListItemContent = React.forwardRef<HTMLDivElement, ListItemContentProps>(
   ({ children, className, ...props }, ref) => {
-    // Check if the children are a plain string or an array of strings
     const isSimpleText = React.Children.toArray(children).every(
       (child) => typeof child === "string"
     );
 
-    // Choose the appropriate element
     const Wrapper = isSimpleText ? "p" : "div";
 
     return (
       <Wrapper
         ref={ref}
-        className={cn(" flex flex-grow text-wrap truncate gap-1", className)}
+        className={cn("flex flex-grow text-wrap truncate gap-1", className)}
         {...props}
       >
         {children}
@@ -249,7 +269,6 @@ const listGroupVariants = cva("flex flex-col", {
   },
 });
 
-// Update the props interface to be generic
 interface ListGroupProps
   extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof listGroupVariants> {
@@ -260,7 +279,6 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
   ({ className, variant, "aria-label": ariaLabel, children, ...props }, ref) => {
     const listContext = React.useContext(ListContext);
     
-    // Separate title and items
     const childrenArray = React.Children.toArray(children);
     const titleElement = childrenArray.find(
       child => React.isValidElement(child) && child.type === ListGroupTitle
@@ -273,11 +291,11 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
       return (
         <li
           ref={ref as React.Ref<HTMLLIElement>}
-          className="Groupwrapper list-none flex flex-col items-start w-full px-1"
+          className="list-none flex flex-col items-start w-full"
         >
           {titleElement}
           <ul 
-            className={cn(" w-full", listGroupVariants({ variant }), className)}
+            className={cn("w-full", listGroupVariants({ variant }), className)}
             aria-label={ariaLabel}
           >
             {items}
@@ -286,7 +304,6 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
       );
     }
 
-    // If not inside a List, keep original behavior
     return (
       <div
         ref={ref as React.Ref<HTMLDivElement>}
@@ -330,11 +347,11 @@ const ListGroupTitle = React.forwardRef<HTMLDivElement, ListGroupTitleProps>(
     const sizeClasses = {
       sm: {
         icon: "h-3 w-3 ",
-        text: "text-sm", // Smaller text size
+        text: "text-sm",
       },
       md: {
-        icon: "h-4 w-4", // Default icon size
-        text: "text-base", // Default text size
+        icon: "h-4 w-4",
+        text: "text-base",
       },
       lg: {
         icon: "h-6 w-6",
@@ -346,7 +363,7 @@ const ListGroupTitle = React.forwardRef<HTMLDivElement, ListGroupTitleProps>(
       <div
         ref={ref}
         className={cn(
-          "flex items-center justify-center space-x-1 ",
+          "flex items-center justify-center space-x-1",
           listGroupTitleVariants({ variant }),
           className
         )}
@@ -358,15 +375,14 @@ const ListGroupTitle = React.forwardRef<HTMLDivElement, ListGroupTitleProps>(
           >
             {icon}
           </div>
-        )}{" "}
-        {/* Apply icon size */}
-        <span className={sizeClasses[size].text}>{props.children}</span>{" "}
-        {/* Apply text size */}
+        )}
+        <span className={sizeClasses[size].text}>{props.children}</span>
       </div>
     );
   }
 );
 ListGroupTitle.displayName = "ListGroupTitle";
+
 export {
   List,
   ListItem,

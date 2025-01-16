@@ -55,7 +55,7 @@ const ListDemo = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl space-y-8 p-1">
+    <div className="w-full max-w-3xl space-y-8 p-1 ">
       {/* Basic List with Groups */}
       <section>
         <h2 className="mb-4 text-lg font-semibold">Grouped List</h2>
@@ -68,7 +68,7 @@ const ListDemo = () => {
             >
               Inbox
             </ListGroupTitle>
-            <ListItem>
+            <ListItem size="lg">
               <ListItemIcon>
                 <Inbox className="h-4 w-4" />
               </ListItemIcon>
@@ -119,6 +119,7 @@ const ListDemo = () => {
               <ListItem
                 key={item.id}
                 variant="interactive"
+                size="sm"
                 selected={selectedItems.includes(item.id)}
                 onClick={() => toggleSelection(item.id)}
               >

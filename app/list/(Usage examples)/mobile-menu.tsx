@@ -42,31 +42,29 @@ export default function MobileMenu() {
   const [selectedMenuItem, setSelectedMenuItem] = useState<number | null>(null);
 
   return (
-    <div className=" min-h-80 bg-gray-100 flex flex-col  p-2">
+    <div className=" min-h-80 bg-secondary flex flex-col  p-2">
       <div className="flex w-full h-4 items-center justify-between mb-4 bg-black/10 rounded-full overflow-clip"></div>
-      {/* Sliding Menu */}
       <div
         className="
-         h-full w-64 bg-white shadow-lg"
+         h-full w-64 bg-card shadow-lg p-4 rounded"
       >
-        <div className="p-4">
-          <List>
+          <List aria-label="Mobile Menu" listRole="menu" 
+          isInteractive
+          className="space-y-2">
             {menuItems.map((item) => (
-              <ListItem
-              variant={"striped"}
+              <ListItem className=" "
                 key={item.id}
+                variant={"interactive"}
+                size={"lg"}
                 selected={item.id === selectedMenuItem}
                 onClick={() => setSelectedMenuItem(item.id)}
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemContent>{item.label}</ListItemContent>
-                <ListItemAction>
-                  <ChevronRight className="h-4 w-4" />
-                </ListItemAction>
+
               </ListItem>
             ))}
           </List>
-        </div>
       </div>
     </div>
   );
