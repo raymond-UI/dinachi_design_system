@@ -31,11 +31,13 @@ const sizeConfig = {
 
 type SizeType = keyof typeof sizeConfig;
 
-// Context to share list properties
+// Enhanced Context to share list properties
 interface ListContextValue {
   variant: "default" | undefined;
   listRole?: "list" | "listbox" | "menu";
   isInteractive?: boolean;
+  titleId?: string;
+  descriptionId?: string;
 }
 
 const ListContext = React.createContext<ListContextValue>({
@@ -56,12 +58,15 @@ const listVariants = cva("w-full", {
 });
 
 interface ListProps
-  extends Omit<React.HTMLAttributes<HTMLUListElement>, 'aria-label'>,
-    VariantProps<typeof listVariants> {
+  extends Omit<React.HTMLAttributes<HTMLUListElement>, 'aria-label'> {
   'aria-label': string;
+  'aria-labelledby'?: string;
+  'aria-describedby'?: string;
   listRole?: "list" | "listbox" | "menu";
   orientation?: "horizontal" | "vertical";
   isInteractive?: boolean;
+  description?: string;
+  variant?: "default";
 }
 
 const List = React.forwardRef<HTMLUListElement, ListProps>(
@@ -72,17 +77,36 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
     orientation = "vertical",
     isInteractive = false,
     "aria-label": ariaLabel,
+    "aria-labelledby": ariaLabelledBy,
+    "aria-describedby": ariaDescribedBy,
+    description,
     ...props
   }, ref) => {
-    const ariaProps = listRole === "list" 
-      ? { "aria-label": ariaLabel }
-      : { 
-          "aria-orientation": orientation,
-          "aria-label": ariaLabel
-        };
+    const titleId = React.useId();
+    const descriptionId = React.useId();
+
+    const ariaProps = {
+      ...(listRole === "list" ? {} : { "aria-orientation": orientation }),
+      ...(ariaLabel ? { "aria-label": ariaLabel } : {}),
+      ...(ariaLabelledBy ? { "aria-labelledby": ariaLabelledBy } : {}),
+      ...(description || ariaDescribedBy ? { 
+        "aria-describedby": ariaDescribedBy || descriptionId 
+      } : {})
+    };
 
     return (
-      <ListContext.Provider value={{ variant: variant ?? "default", listRole, isInteractive }}>
+      <ListContext.Provider value={{ 
+        variant: variant ?? "default",
+        listRole,
+        isInteractive,
+        titleId,
+        descriptionId
+      }}>
+        {description && (
+          <div id={descriptionId} className="sr-only">
+            {description}
+          </div>
+        )}
         <ul
           ref={ref}
           role={listRole}
@@ -119,8 +143,6 @@ const listItemVariants = cva(
   }
 );
 
-const ListItemContext = React.createContext<{ size?: SizeType }>({});
-
 interface ListItemProps
   extends React.HTMLAttributes<HTMLLIElement>,
     VariantProps<typeof listItemVariants> {
@@ -128,6 +150,9 @@ interface ListItemProps
   selected?: boolean;
   leading?: React.ReactNode;
   size?: SizeType;
+  description?: string;
+  'aria-labelledby'?: string;
+  'aria-describedby'?: string;
 }
 
 const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
@@ -139,22 +164,30 @@ const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
     selected,
     leading,
     onClick,
+    description,
+    "aria-labelledby": ariaLabelledBy,
+    "aria-describedby": ariaDescribedBy,
     children,
     ...props 
   }, ref) => {
     const { listRole, isInteractive } = React.useContext(ListContext);
     const [isFocused, setIsFocused] = React.useState(false);
+    const descriptionId = React.useId();
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
-      if (disabled) return;
-      if (isInteractive && onClick && (event.key === "Enter" || event.key === " ")) {
+      if (!disabled && isInteractive && onClick && (event.key === "Enter" || event.key === " ")) {
         event.preventDefault();
         onClick(event as unknown as React.MouseEvent<HTMLLIElement>);
       }
     };
 
     return (
-      <ListItemContext.Provider value={{ size }}>
+      <>
+        {description && (
+          <div id={descriptionId} className="sr-only">
+            {description}
+          </div>
+        )}
         <li
           ref={ref}
           role={
@@ -166,6 +199,8 @@ const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
           }
           aria-disabled={disabled}
           aria-selected={listRole === "listbox" ? selected : undefined}
+          aria-labelledby={ariaLabelledBy}
+          aria-describedby={ariaDescribedBy || (description ? descriptionId : undefined)}
           tabIndex={isInteractive && !disabled ? 0 : undefined}
           onClick={disabled ? undefined : onClick}
           onKeyDown={handleKeyDown}
@@ -191,7 +226,7 @@ const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
           )}
           {children}
         </li>
-      </ListItemContext.Provider>
+      </>
     );
   }
 );
@@ -199,21 +234,21 @@ ListItem.displayName = "ListItem";
 
 interface ListItemContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
+  "aria-labelledby"?: string;
 }
 
 const ListItemContent = React.forwardRef<HTMLDivElement, ListItemContentProps>(
-  ({ children, className, ...props }, ref) => {
-    // Check if the children are a plain string or an array of strings
+  ({ children, className, "aria-labelledby": ariaLabelledBy, ...props }, ref) => {
     const isSimpleText = React.Children.toArray(children).every(
       (child) => typeof child === "string"
     );
 
-    // Choose the appropriate element based on content type
     const Wrapper = isSimpleText ? "p" : "div";
 
     return (
       <Wrapper
         ref={ref}
+        aria-labelledby={ariaLabelledBy}
         className={cn("flex-grow min-w-0 flex text-wrap truncate gap-1", className)}
         {...props}
       >
@@ -226,12 +261,14 @@ ListItemContent.displayName = "ListItemContent";
 
 interface ListItemActionProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: SizeType;
+  "aria-label"?: string;
 }
 
 const ListItemAction = React.forwardRef<HTMLDivElement, ListItemActionProps>(
-  ({ className, size = "md", ...props }, ref) => (
+  ({ className, size = "md", "aria-label": ariaLabel, ...props }, ref) => (
     <div
       ref={ref}
+      aria-label={ariaLabel}
       className={cn(
         "ml-2 flex items-center",
         sizeConfig[size].action,
@@ -260,13 +297,23 @@ interface ListGroupProps
   extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof listGroupVariants> {
   "aria-label"?: string;
+  "aria-labelledby"?: string;
+  description?: string;
 }
 
 const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
-  ({ className, variant, "aria-label": ariaLabel, children, ...props }, ref) => {
+  ({ 
+    className, 
+    variant, 
+    "aria-label": ariaLabel,
+    "aria-labelledby": ariaLabelledBy,
+    description,
+    children, 
+    ...props 
+  }, ref) => {
     const listContext = React.useContext(ListContext);
+    const descriptionId = React.useId();
     
-    // Separate title and items
     const childrenArray = React.Children.toArray(children);
     const titleElement = childrenArray.find(
       child => React.isValidElement(child) && child.type === ListGroupTitle
@@ -281,10 +328,17 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
           ref={ref as React.Ref<HTMLLIElement>}
           className="list-none flex flex-col items-start w-full px-1"
         >
+          {description && (
+            <div id={descriptionId} className="sr-only">
+              {description}
+            </div>
+          )}
           {titleElement}
           <ul 
             className={cn("w-full", listGroupVariants({ variant }), className)}
             aria-label={ariaLabel}
+            aria-labelledby={ariaLabelledBy}
+            aria-describedby={description ? descriptionId : undefined}
           >
             {items}
           </ul>
@@ -297,9 +351,16 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
         ref={ref as React.Ref<HTMLDivElement>}
         role="group"
         aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        aria-describedby={description ? descriptionId : undefined}
         className={cn(listGroupVariants({ variant }), className)}
         {...props}
       >
+        {description && (
+          <div id={descriptionId} className="sr-only">
+            {description}
+          </div>
+        )}
         {children}
       </div>
     );
@@ -328,31 +389,44 @@ interface ListGroupTitleProps
     VariantProps<typeof listGroupTitleVariants> {
   icon?: React.ReactNode;
   size?: SizeType;
+  description?: string;
 }
 
 const ListGroupTitle = React.forwardRef<HTMLDivElement, ListGroupTitleProps>(
-  ({ className, variant, icon, size = "md", children, ...props }, ref) => {
+  ({ className, variant, icon, size = "md", description, children, ...props }, ref) => {
+    const descriptionId = React.useId();
+    const titleId = React.useId();
+
     return (
-      <div
-        ref={ref}
-        className={cn(
-          "flex items-center space-x-1",
-          listGroupTitleVariants({ variant }),
-          sizeConfig[size].groupTitle,
-          className
-        )}
-        {...props}
-      >
-        {icon && (
-          <div className={cn(
-            "flex items-center justify-center",
-            sizeConfig[size].groupTitleIcon
-          )}>
-            {icon}
+      <>
+        {description && (
+          <div id={descriptionId} className="sr-only">
+            {description}
           </div>
         )}
-        <span>{children}</span>
-      </div>
+        <div
+          ref={ref}
+          id={titleId}
+          aria-describedby={description ? descriptionId : undefined}
+          className={cn(
+            "flex items-center space-x-1",
+            listGroupTitleVariants({ variant }),
+            sizeConfig[size].groupTitle,
+            className
+          )}
+          {...props}
+        >
+          {icon && (
+            <div className={cn(
+              "flex items-center justify-center",
+              sizeConfig[size].groupTitleIcon
+            )}>
+              {icon}
+            </div>
+          )}
+          <span>{children}</span>
+        </div>
+      </>
     );
   }
 );
