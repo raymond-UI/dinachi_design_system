@@ -3,6 +3,7 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
 
 // Centralized size configuration
 const sizeConfig = {
@@ -286,6 +287,7 @@ const listGroupVariants = cva("flex flex-col", {
       default: "items-start",
       compact: "items-start",
       spaced: "items-start space-y-2",
+      collapsible: "items-start", 
     },
   },
   defaultVariants: {
@@ -299,6 +301,7 @@ interface ListGroupProps
   "aria-label"?: string;
   "aria-labelledby"?: string;
   description?: string;
+  defaultExpanded?: boolean; 
 }
 
 const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
@@ -308,11 +311,13 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
     "aria-label": ariaLabel,
     "aria-labelledby": ariaLabelledBy,
     description,
+    defaultExpanded = true,
     children, 
     ...props 
   }, ref) => {
     const listContext = React.useContext(ListContext);
     const descriptionId = React.useId();
+    const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
     
     const childrenArray = React.Children.toArray(children);
     const titleElement = childrenArray.find(
@@ -321,6 +326,42 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
     const items = childrenArray.filter(
       child => React.isValidElement(child) && child.type === ListItem
     );
+
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();  
+        setIsExpanded(!isExpanded);
+      }
+    };
+
+    const titleWithCollapse = variant === 'collapsible' && titleElement
+      ? React.cloneElement(titleElement as React.ReactElement<ListGroupTitleProps>, {
+          onClick: () => setIsExpanded(!isExpanded),
+          onKeyDown: handleKeyDown, 
+          role: "button",
+          tabIndex: 0, 
+          "aria-expanded": isExpanded,
+          "aria-controls": `group-content-${descriptionId}`,
+          className: cn(
+            (titleElement as React.ReactElement<ListGroupTitleProps>).props.className,
+            "cursor-pointer hover:text-primary transition-colors",
+            "flex items-center focus:outline-none focus:ring-1 focus:ring-primary focus:ring-offset-2 focus-ring-rounded-md"
+          ),
+          children: (
+            <>
+              <div className="flex flex-row items-center">
+                {(titleElement as React.ReactElement<ListGroupTitleProps>).props.children}
+                <ChevronRight
+                  className={cn(
+                    "mr-1 transition-transform",
+                    isExpanded && "transform rotate-90"
+                  )}
+                />
+              </div>
+            </>
+          ),
+        })
+      : titleElement;
     
     if (listContext.listRole === "list") {
       return (
@@ -333,12 +374,19 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
               {description}
             </div>
           )}
-          {titleElement}
+          {titleWithCollapse}
           <ul 
-            className={cn("w-full", listGroupVariants({ variant }), className)}
+            id={`group-content-${descriptionId}`}
+            className={cn(
+              "w-full transition-all duration-200",
+              listGroupVariants({ variant }),
+              variant === 'collapsible' && !isExpanded && "hidden",
+              className
+            )}
             aria-label={ariaLabel}
             aria-labelledby={ariaLabelledBy}
             aria-describedby={description ? descriptionId : undefined}
+            role={variant === 'collapsible' ? "region" : undefined}
           >
             {items}
           </ul>
@@ -361,7 +409,17 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
             {description}
           </div>
         )}
-        {children}
+        {titleWithCollapse}
+        <div
+          id={`group-content-${descriptionId}`}
+          className={cn(
+            "w-full transition-all duration-200",
+            variant === 'collapsible' && !isExpanded && "hidden"
+          )}
+          role={variant === 'collapsible' ? "region" : undefined}
+        >
+          {items}
+        </div>
       </div>
     );
   }
@@ -393,7 +451,7 @@ interface ListGroupTitleProps
 }
 
 const ListGroupTitle = React.forwardRef<HTMLDivElement, ListGroupTitleProps>(
-  ({ className, variant, icon, size = "md", description, children, ...props }, ref) => {
+  ({ className, variant, icon, size = "sm", description, children, ...props }, ref) => {
     const descriptionId = React.useId();
     const titleId = React.useId();
 

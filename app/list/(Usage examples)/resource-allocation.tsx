@@ -24,7 +24,7 @@ export default function ResourceAllocation() {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Resource Allocation</h1>
       <List aria-label='Resource Allocation List'>
-        <ListGroup>
+        <ListGroup variant="collapsible" defaultExpanded={true}>
           <ListGroupTitle icon={<Server />}>System Resources</ListGroupTitle>
           {resources.map(resource => (
             <ListItem key={resource.id}>
@@ -38,7 +38,7 @@ export default function ResourceAllocation() {
             </ListItem>
           ))}
         </ListGroup>
-        <ListGroup>
+        <ListGroup variant="collapsible" defaultExpanded={true} description='This is a description of the storage resources'>
           <ListGroupTitle icon={<Server />}>Storage Resources</ListGroupTitle>
           {storageResources.map(resource => (
             <ListItem key={resource.id}>
