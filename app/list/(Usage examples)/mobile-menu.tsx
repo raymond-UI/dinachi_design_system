@@ -55,7 +55,7 @@ export default function MobileMenu() {
               <ListItem className=" "
                 key={item.id}
                 variant={"interactive"}
-                size={"lg"}
+                size={"sm"}
                 selected={item.id === selectedMenuItem}
                 onClick={() => setSelectedMenuItem(item.id)}
               >

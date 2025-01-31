@@ -4,7 +4,7 @@ import React from "react";
 import {
   List,
   ListItem,
-  ListItemIcon,
+  // ListItemIcon,
   ListItemContent,
   ListGroup,
   ListGroupTitle,
@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { motion } from "motion/react"
 import { Bot } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 
 const ListGrid = () => {
@@ -78,17 +79,19 @@ const ListGrid = () => {
       <List
        aria-label="AI Capabilities"
       listRole={"list"}
+      // description="This is a description of the list"
       isInteractive
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 h-auto"
       >
         {aiTerms.map((term, index) => (
           <ListItem
+          leading={<Checkbox title="Checkbox "/>}
             key={index}
             variant="interactive"
-            size={"lg"}
+            size={"sm"}
             className=" border-dotted border h-full"
           >
-            <ListItemIcon>{term.icon}</ListItemIcon>
+            {/* <ListItemIcon>{term.icon}</ListItemIcon> */}
             <ListItemContent>{term.term}</ListItemContent>
           </ListItem>
         ))}

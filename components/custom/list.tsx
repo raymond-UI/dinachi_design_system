@@ -4,6 +4,33 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
+// Centralized size configuration
+const sizeConfig = {
+  sm: {
+    item: "p-2 text-sm",
+    leading: "h-4 w-4 mr-2",
+    action: "h-4 w-4",
+    groupTitle: "text-sm",
+    groupTitleIcon: "h-3 w-3",
+  },
+  md: {
+    item: "p-2 text-base",
+    leading: "h-5 w-5 mr-2",
+    action: "h-5 w-5",
+    groupTitle: "text-base",
+    groupTitleIcon: "h-4 w-4",
+  },
+  lg: {
+    item: "p-3 text-lg",
+    leading: "h-6 w-6 mr-3",
+    action: "h-6 w-6",
+    groupTitle: "text-lg",
+    groupTitleIcon: "h-5 w-5",
+  },
+} as const;
+
+type SizeType = keyof typeof sizeConfig;
+
 // Context to share list properties
 interface ListContextValue {
   variant: "default" | undefined;
@@ -17,50 +44,36 @@ const ListContext = React.createContext<ListContextValue>({
   isInteractive: false,
 });
 
-// Enhanced list variants with better spacing and styling options
 const listVariants = cva("w-full", {
   variants: {
     variant: {
       default: "",
     },
-
   },
   defaultVariants: {
     variant: "default",
   },
 });
 
-
-
 interface ListProps
   extends Omit<React.HTMLAttributes<HTMLUListElement>, 'aria-label'>,
     VariantProps<typeof listVariants> {
-  /**
-   * Required ARIA label for the list
-   */
   'aria-label': string;
-  /** Role of the list element */
   listRole?: "list" | "listbox" | "menu";
-  /** Orientation of the list items */
   orientation?: "horizontal" | "vertical";
-  /** Whether the list items are interactive */
   isInteractive?: boolean;
 }
 
 const List = React.forwardRef<HTMLUListElement, ListProps>(
-  (
-    {
-      className,
-      variant,
-      listRole = "list",
-      orientation = "vertical",
-      isInteractive = false,
-      "aria-label": ariaLabel,
-      ...props
-    },
-    ref
-  ) => {
-    // Only include aria-orientation for listbox and menu roles
+  ({
+    className,
+    variant,
+    listRole = "list",
+    orientation = "vertical",
+    isInteractive = false,
+    "aria-label": ariaLabel,
+    ...props
+  }, ref) => {
     const ariaProps = listRole === "list" 
       ? { "aria-label": ariaLabel }
       : { 
@@ -69,9 +82,7 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
         };
 
     return (
-      <ListContext.Provider
-        value={{ variant: variant ?? "default", listRole, isInteractive }}
-      >
+      <ListContext.Provider value={{ variant: variant ?? "default", listRole, isInteractive }}>
         <ul
           ref={ref}
           role={listRole}
@@ -85,57 +96,58 @@ const List = React.forwardRef<HTMLUListElement, ListProps>(
 );
 List.displayName = "List";
 
-
-// Enhanced list item variants with improved interaction states
 const listItemVariants = cva(
-  "flex items-center justify-between  w-full text-base transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded mb-2 last:mb-0 px-1",
+  "flex items-center justify-between w-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 rounded mb-2 last:mb-0",
   {
     variants: {
       variant: {
         default: "",
-        bordered: "py-1 px-1 border-b border-dashed last:border-none rounded-none",
-        interactive:
-          "transition-colors duration-200 ease-in-out hover:bg-accent  cursor-pointer active:text-primary",
+        bordered: "border-b border-dashed last:border-none rounded-none",
+        interactive: "transition-colors duration-200 ease-in-out hover:bg-accent cursor-pointer active:text-primary",
         striped: "odd:bg-muted/50 even:bg-none",
-        
       },
       size: {
-        default: "",
-        sm: "p-2 text-sm",
-        md: "p-2 text-lg",
-        lg: "p-2 text-xl",
+        sm: sizeConfig.sm.item,
+        md: sizeConfig.md.item,
+        lg: sizeConfig.lg.item,
       },
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
+      size: "md",
     },
   }
 );
 
-const ListItemContext = React.createContext<{ size?: string }>({});
+const ListItemContext = React.createContext<{ size?: SizeType }>({});
 
 interface ListItemProps
   extends React.HTMLAttributes<HTMLLIElement>,
     VariantProps<typeof listItemVariants> {
   disabled?: boolean;
   selected?: boolean;
-  index?: number;
-  size?:  "sm" | "md" | "lg";
+  leading?: React.ReactNode;
+  size?: SizeType;
 }
 
 const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
-  ({ className, variant, size, disabled, selected, onClick, index, ...props }, ref) => {
+  ({ 
+    className,
+    variant,
+    size = "md",
+    disabled,
+    selected,
+    leading,
+    onClick,
+    children,
+    ...props 
+  }, ref) => {
     const { listRole, isInteractive } = React.useContext(ListContext);
     const [isFocused, setIsFocused] = React.useState(false);
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
       if (disabled) return;
-      if (
-        isInteractive &&
-        onClick &&
-        (event.key === "Enter" || event.key === " ")
-      ) {
+      if (isInteractive && onClick && (event.key === "Enter" || event.key === " ")) {
         event.preventDefault();
         onClick(event as unknown as React.MouseEvent<HTMLLIElement>);
       }
@@ -161,41 +173,29 @@ const ListItem = React.forwardRef<HTMLLIElement, ListItemProps>(
           onBlur={() => setIsFocused(false)}
           className={cn(
             listItemVariants({ variant, size }),
-            selected && "bg-primary/5  text-primary",
+            selected && "bg-primary/5 text-primary",
             isFocused && "outline-1 outline-offset-1 outline-focus text-primary",
             className
           )}
           {...props}
-        />
+        >
+          {leading && (
+            <div
+              className={cn(
+                "flex items-center justify-center shrink-0",
+                sizeConfig[size].leading
+              )}
+            >
+              {leading}
+            </div>
+          )}
+          {children}
+        </li>
       </ListItemContext.Provider>
     );
   }
 );
-
 ListItem.displayName = "ListItem";
-
-const ListItemIcon = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, "aria-hidden": ariaHidden = true, ...props }, ref) => {
-    const { size } = React.useContext(ListItemContext);
-
-    const sizeClasses = {
-      sm: "h-4 w-4",
-      md: "h-5 w-5",
-      lg: "h-6 w-6",
-    };
-
-    return (
-      <div
-        ref={ref}
-        aria-hidden={ariaHidden}
-        className={cn("flex items-center justify-start mr-2 shrink-0", sizeClasses[size as "sm" | "md" | "lg"] || sizeClasses['md'], className)}
-        {...props}
-      />
-    );
-  }
-);
-
-ListItemIcon.displayName = "ListItemIcon";
 
 interface ListItemContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -208,13 +208,13 @@ const ListItemContent = React.forwardRef<HTMLDivElement, ListItemContentProps>(
       (child) => typeof child === "string"
     );
 
-    // Choose the appropriate element
+    // Choose the appropriate element based on content type
     const Wrapper = isSimpleText ? "p" : "div";
 
     return (
       <Wrapper
         ref={ref}
-        className={cn(" flex flex-grow text-wrap truncate gap-1", className)}
+        className={cn("flex-grow min-w-0 flex text-wrap truncate gap-1", className)}
         {...props}
       >
         {children}
@@ -224,16 +224,23 @@ const ListItemContent = React.forwardRef<HTMLDivElement, ListItemContentProps>(
 );
 ListItemContent.displayName = "ListItemContent";
 
-const ListItemAction = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("ml-2 flex items-center", className)}
-    {...props}
-  />
-));
+interface ListItemActionProps extends React.HTMLAttributes<HTMLDivElement> {
+  size?: SizeType;
+}
+
+const ListItemAction = React.forwardRef<HTMLDivElement, ListItemActionProps>(
+  ({ className, size = "md", ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        "ml-2 flex items-center",
+        sizeConfig[size].action,
+        className
+      )}
+      {...props}
+    />
+  )
+);
 ListItemAction.displayName = "ListItemAction";
 
 const listGroupVariants = cva("flex flex-col", {
@@ -249,7 +256,6 @@ const listGroupVariants = cva("flex flex-col", {
   },
 });
 
-// Update the props interface to be generic
 interface ListGroupProps
   extends React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof listGroupVariants> {
@@ -273,11 +279,11 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
       return (
         <li
           ref={ref as React.Ref<HTMLLIElement>}
-          className="Groupwrapper list-none flex flex-col items-start w-full px-1"
+          className="list-none flex flex-col items-start w-full px-1"
         >
           {titleElement}
           <ul 
-            className={cn(" w-full", listGroupVariants({ variant }), className)}
+            className={cn("w-full", listGroupVariants({ variant }), className)}
             aria-label={ariaLabel}
           >
             {items}
@@ -286,7 +292,6 @@ const ListGroup = React.forwardRef<HTMLElement, ListGroupProps>(
       );
     }
 
-    // If not inside a List, keep original behavior
     return (
       <div
         ref={ref as React.Ref<HTMLDivElement>}
@@ -318,63 +323,52 @@ const listGroupTitleVariants = cva(
   }
 );
 
-export interface ListGroupTitleProps
+interface ListGroupTitleProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof listGroupTitleVariants> {
   icon?: React.ReactNode;
-  size?: "sm" | "md" | "lg";
+  size?: SizeType;
 }
 
 const ListGroupTitle = React.forwardRef<HTMLDivElement, ListGroupTitleProps>(
-  ({ className, variant, icon, size = "sm", ...props }, ref) => {
-    const sizeClasses = {
-      sm: {
-        icon: "h-3 w-3 ",
-        text: "text-sm", // Smaller text size
-      },
-      md: {
-        icon: "h-4 w-4", // Default icon size
-        text: "text-base", // Default text size
-      },
-      lg: {
-        icon: "h-6 w-6",
-        text: "text-lg",
-      },
-    };
-
+  ({ className, variant, icon, size = "md", children, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
-          "flex items-center justify-center space-x-1 ",
+          "flex items-center space-x-1",
           listGroupTitleVariants({ variant }),
+          sizeConfig[size].groupTitle,
           className
         )}
         {...props}
       >
         {icon && (
-          <div
-            className={`${sizeClasses[size].icon} flex items-center justify-center`}
-          >
+          <div className={cn(
+            "flex items-center justify-center",
+            sizeConfig[size].groupTitleIcon
+          )}>
             {icon}
           </div>
-        )}{" "}
-        {/* Apply icon size */}
-        <span className={sizeClasses[size].text}>{props.children}</span>{" "}
-        {/* Apply text size */}
+        )}
+        <span>{children}</span>
       </div>
     );
   }
 );
 ListGroupTitle.displayName = "ListGroupTitle";
+
 export {
   List,
   ListItem,
-  ListItemIcon,
   ListItemContent,
   ListItemAction,
   ListGroup,
   ListGroupTitle,
   type ListProps,
   type ListItemProps,
+  type ListItemActionProps,
+  type ListGroupProps,
+  type ListGroupTitleProps,
+  type SizeType,
 };

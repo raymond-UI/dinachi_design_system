@@ -24,9 +24,9 @@ const components = [
     url: "/grid-list",
   },
   {
-    value: "input",
-    label: "Input",
-    url: "/input",
+    value: "charts",
+    label: "charts",
+    url: "/charts",
   },
 ];
 

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import {
   List,
   ListItem,
-  ListItemIcon,
+  // ListItemIcon,
   ListItemContent,
   ListItemAction,
   ListGroup,
@@ -64,39 +64,39 @@ const ListDemo = () => {
             <ListGroupTitle
               variant="primary"
               icon={<InboxIcon className="" />}
-              size="sm"
+              size="lg"
             >
               Inbox
             </ListGroupTitle>
-            <ListItem size="lg">
-              <ListItemIcon>
+            <ListItem size="lg" leading={<Inbox />}>
+              {/* <ListItemIcon>
                 <Inbox className="h-4 w-4" />
-              </ListItemIcon>
+              </ListItemIcon> */}
               <ListItemContent>Primary</ListItemContent>
               <ListItemAction>
                 <Badge>23</Badge>
               </ListItemAction>
             </ListItem>
-            <ListItem>
-              <ListItemIcon>
+            <ListItem leading={<Star />}>
+{/*               <ListItemIcon>
                 <Star className="h-4 w-4" />
-              </ListItemIcon>
+              </ListItemIcon> */}
               <ListItemContent>Starred</ListItemContent>
             </ListItem>
           </ListGroup>
 
           <ListGroup>
             <ListGroupTitle variant="accent">Categories</ListGroupTitle>
-            <ListItem>
-              <ListItemIcon>
+            <ListItem leading={<Tags />}>
+              {/* <ListItemIcon>
                 <Tags className="h-4 w-4" />
-              </ListItemIcon>
+              </ListItemIcon> */}
               <ListItemContent>Personal</ListItemContent>
             </ListItem>
-            <ListItem>
-              <ListItemIcon>
+            <ListItem leading={<Users />}>
+              {/* <ListItemIcon>
                 <Users className="h-4 w-4" />
-              </ListItemIcon>
+              </ListItemIcon> */}
               <ListItemContent>Team</ListItemContent>
             </ListItem>
           </ListGroup>
@@ -106,9 +106,10 @@ const ListDemo = () => {
       {/* Interactive Grouped List */}
       <section>
         <h2 className="mb-4 text-lg font-semibold">Interactive Grouped List</h2>
-        <List listRole="listbox" isInteractive aria-label="Select a label">
+        <List listRole="listbox" isInteractive aria-label="Select a label" description="This is a description of the list"
+        >
           <ListGroup variant="spaced">
-            <ListGroupTitle icon={<ReceiptIcon />} size="lg">
+            <ListGroupTitle icon={<ReceiptIcon />} size="md">
               Recent
             </ListGroupTitle>
             {[
@@ -117,15 +118,17 @@ const ListDemo = () => {
               { id: "archive", icon: Archive, label: "Archive" },
             ].map((item) => (
               <ListItem
+              leading={<item.icon />}
                 key={item.id}
                 variant="interactive"
-                size="sm"
+                size="lg"
+                description="This is a description"
                 selected={selectedItems.includes(item.id)}
                 onClick={() => toggleSelection(item.id)}
               >
-                <ListItemIcon>
+                {/* <ListItemIcon>
                   <item.icon />
-                </ListItemIcon>
+                </ListItemIcon> */}
                 <ListItemContent>{item.label}</ListItemContent>
                 {selectedItems.includes(item.id) && (
                   <ListItemAction>
@@ -144,14 +147,15 @@ const ListDemo = () => {
               { id: "settings", icon: Settings, label: "Settings" },
             ].map((item) => (
               <ListItem
+               leading={<item.icon />}
                 key={item.id}
                 variant="interactive"
                 selected={selectedItems.includes(item.id)}
                 onClick={() => toggleSelection(item.id)}
               >
-                <ListItemIcon>
-                  <item.icon className="h-4 w-4" />
-                </ListItemIcon>
+                {/* <ListItemIcon> */}
+                  {/* <item.icon className="h-4 w-4" /> */}
+                {/* </ListItemIcon> */}
                 <ListItemContent>{item.label}</ListItemContent>
                 {selectedItems.includes(item.id) && (
                   <ListItemAction>
@@ -195,11 +199,11 @@ const ListDemo = () => {
                 color: "text-green-500",
               },
             ].map((item) => (
-              <ListItem key={item.id} className="group">
-                <ListItemIcon className={item.color}>
-                  <item.icon className="h-4 w-4" />
-                </ListItemIcon>
-                <ListItemContent>
+              <ListItem key={item.id} className="group" leading={<item.icon  className={item.color}/>}>
+                {/* <ListItemIcon className={item.color}>
+                  <item.icon />
+                </ListItemIcon> */}
+                <ListItemContent className="flex items-center">
                   <div className="font-medium">{item.label}</div>
                   <p className="text-xs text-muted-foreground">
                     {item.count} tasks pending
@@ -232,16 +236,16 @@ const ListDemo = () => {
          >
           <ListGroup className="flex-row space-x-2">
             <ListGroupTitle className="flex items-center">Main:</ListGroupTitle>
-            <ListItem variant="striped" className="inline-flex">
-              <ListItemIcon>
+            <ListItem variant="striped" className="inline-flex" leading={<Home />}>
+              {/* <ListItemIcon>
                 <Home className="h-4 w-4" />
-              </ListItemIcon>
+              </ListItemIcon> */}
               <ListItemContent>Home</ListItemContent>
             </ListItem>
-            <ListItem variant="striped" className="inline-flex">
-              <ListItemIcon>
+            <ListItem variant="striped" className="inline-flex" leading={<FileText />}>
+              {/* <ListItemIcon>
                 <FileText className="h-4 w-4" />
-              </ListItemIcon>
+              </ListItemIcon> */}
               <ListItemContent>Files</ListItemContent>
             </ListItem>
           </ListGroup>
@@ -250,23 +254,23 @@ const ListDemo = () => {
             <ListGroupTitle className="flex items-center">
               Tools:
             </ListGroupTitle>
-            <ListItem variant="striped" className="inline-flex">
-              <ListItemIcon>
+            <ListItem variant="striped" className="inline-flex" leading={<Settings />}>
+              {/* <ListItemIcon>
                 <Settings className="h-4 w-4" />
-              </ListItemIcon>
+              </ListItemIcon> */}
               <ListItemContent>Settings</ListItemContent>
             </ListItem>
-            <ListItem variant="striped" className="inline-flex">
-              <ListItemIcon>
-                <Bell className="h-4 w-4" />
-              </ListItemIcon>
+            <ListItem variant="striped" className="inline-flex" leading={<Bell />}>
+              {/* <ListItemIcon> */}
+                {/* <Bell className="h-4 w-4" /> */}
+              {/* </ListItemIcon> */}
               <ListItemContent>Notifications</ListItemContent>
             </ListItem>
           </ListGroup>
         </List>
       </section>
 
-      <section className="flex flex-col gap-4">
+      {/* <section className="flex flex-col gap-4">
         <AuditLog />
         <PermissionManagement />
         <ResourceAllocation />
@@ -284,7 +288,7 @@ const ListDemo = () => {
 
       <section className="flex flex-col gap-4 border rounded-lg w-min ">
         <MobileMenu />
-      </section>
+      </section> */}
     </div>
   );
 };
