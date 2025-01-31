@@ -1,23 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import {
   List,
-  ListItem,
-  ListItemContent,
-  ListItemAction,
   ListGroup,
   ListGroupTitle,
-  ListItemIcon,
+  ListItem,
+  ListItemAction,
+  ListItemContent,
 } from "@/components/custom/list";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
-  CheckCircle,
   AlertTriangle,
-  XCircle,
+  CheckCircle,
   ClipboardCheck,
+  XCircle,
 } from "lucide-react";
+import { useState } from "react";
 
 export default function ComplianceTracking() {
   const [complianceItems, setComplianceItems] = useState([
@@ -73,11 +72,7 @@ export default function ComplianceTracking() {
             Compliance Requirements
           </ListGroupTitle>
           {complianceItems.map((item) => (
-            <ListItem key={item.id} size={"md"}>
-                <ListItemIcon>
-                  <item.icon  className={`${getStatusColor(item.status)}`}
-                  />
-                </ListItemIcon>
+            <ListItem key={item.id} size={"sm"} leading={<item.icon />}>
                   <ListItemContent>
                 <div className="flex items-center">
                   <div className="flex items-center gap-1">

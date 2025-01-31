@@ -28,11 +28,11 @@ export default function ResourceAllocation() {
           <ListGroupTitle icon={<Server />}>System Resources</ListGroupTitle>
           {resources.map(resource => (
             <ListItem key={resource.id}>
-              <ListItemContent>
-                <span className="font-medium">{resource.name}</span>
+              <ListItemContent className='flex items-center gap-1'>
+                <span className="font-medium">{resource.name}:</span>
                 <span className="text-sm text-muted-foreground">{resource.usage}% used</span>
               </ListItemContent>
-              <ListItemAction className="w-48">
+              <ListItemAction className="w-24 sm:w-48">
                 <Progress value={resource.usage} className="w-full" aria-label={`Progress for ${resource.name}: ${resource.usage}% used`} />
               </ListItemAction>
             </ListItem>
@@ -42,11 +42,11 @@ export default function ResourceAllocation() {
           <ListGroupTitle icon={<Server />}>Storage Resources</ListGroupTitle>
           {storageResources.map(resource => (
             <ListItem key={resource.id}>
-              <ListItemContent>
-                <span className="font-medium">{resource.name}</span>
+              <ListItemContent className='flex items-center gap-1'>
+                <span className="font-medium">{resource.name}:</span>
                 <span className="text-sm text-muted-foreground">{resource.usage}% used</span>
               </ListItemContent>
-              <ListItemAction className="w-48">
+              <ListItemAction className="w-24 sm:w-48">
                 <Progress value={resource.usage} className="w-full" aria-label={`Progress for ${resource.name}: ${resource.usage}% used`} />
               </ListItemAction>
             </ListItem>

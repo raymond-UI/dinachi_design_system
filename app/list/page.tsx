@@ -1,49 +1,46 @@
 "use client";
-import React, { useState } from "react";
 import {
   List,
-  ListItem,
-  // ListItemIcon,
-  ListItemContent,
-  ListItemAction,
   ListGroup,
   ListGroupTitle,
+  ListItem,
+  ListItemAction,
+  // ListItemIcon,
+  ListItemContent,
 } from "@/components/custom/list";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
-  Check,
-  Star,
-  Mail,
-  Settings,
-  User,
-  Bell,
-  Plus,
-  Trash2,
-  Home,
-  FileText,
-  Inbox,
   Archive,
-  Flag,
-  Clock,
+  Bell,
   Calendar,
+  Check,
+  Clock,
+  FileText,
+  Flag,
   FolderClosed,
-  Tags,
-  Users,
+  Home,
+  Inbox,
   InboxIcon,
+  Plus,
   ReceiptIcon,
+  Settings,
+  Star,
+  Tags,
+  Trash2,
+  Users
 } from "lucide-react";
+import { useState } from "react";
 import AuditLog from "./(Usage examples)/audit-logs";
-import PermissionManagement from "./(Usage examples)/permission-management";
-import ResourceAllocation from "./(Usage examples)/resource-allocation";
-import SystemConfig from "./(Usage examples)/system-config";
-import UserManagement from "./(Usage examples)/user-management";
 import AuditSystem from "./(Usage examples)/audit-system";
 import ComplexPermissions from "./(Usage examples)/complex-permissions";
 import ComplianceTracking from "./(Usage examples)/compliance-tracking";
-import MultiTenantInterface from "./(Usage examples)/multi-tenant";
-import ResourceManagement from "./(Usage examples)/resource-management";
 import MobileMenu from "./(Usage examples)/mobile-menu";
+import MultiTenantInterface from "./(Usage examples)/multi-tenant";
+import PermissionManagement from "./(Usage examples)/permission-management";
+import ResourceAllocation from "./(Usage examples)/resource-allocation";
+import ResourceManagement from "./(Usage examples)/resource-management";
+import UserManagement from "./(Usage examples)/user-management";
 
 const ListDemo = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -121,7 +118,7 @@ const ListDemo = () => {
               leading={<item.icon />}
                 key={item.id}
                 variant="interactive"
-                size="lg"
+                size="sm"
                 description="This is a description"
                 selected={selectedItems.includes(item.id)}
                 onClick={() => toggleSelection(item.id)}
@@ -269,26 +266,27 @@ const ListDemo = () => {
           </ListGroup>
         </List>
       </section>
+      <section className="flex flex-col gap-4">
+      <ComplianceTracking />
+      <MobileMenu />
+      </section>
 
-      {/* <section className="flex flex-col gap-4">
+       <section className="flex flex-col gap-4">
         <AuditLog />
         <PermissionManagement />
         <ResourceAllocation />
-        <SystemConfig />
         <UserManagement />
       </section>
 
       <section className="flex flex-col gap-4">
         <AuditSystem />
         <ComplexPermissions />
-        <ComplianceTracking />
         <MultiTenantInterface />
         <ResourceManagement />
       </section>
 
       <section className="flex flex-col gap-4 border rounded-lg w-min ">
-        <MobileMenu />
-      </section> */}
+      </section>
     </div>
   );
 };

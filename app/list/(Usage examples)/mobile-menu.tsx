@@ -7,7 +7,6 @@ import {
   ListItemAction,
   ListGroup,
   ListGroupTitle,
-  ListItemIcon,
 } from "@/components/custom/list";
 import {
   Mail,
@@ -42,7 +41,7 @@ export default function MobileMenu() {
   const [selectedMenuItem, setSelectedMenuItem] = useState<number | null>(null);
 
   return (
-    <div className=" min-h-80 bg-secondary flex flex-col  p-2">
+    <div className=" min-h-80 bg-secondary flex items-center flex-col  p-2 pb-4 w-full">
       <div className="flex w-full h-4 items-center justify-between mb-4 bg-black/10 rounded-full overflow-clip"></div>
       <div
         className="
@@ -53,13 +52,14 @@ export default function MobileMenu() {
           className="space-y-2">
             {menuItems.map((item) => (
               <ListItem className=" "
+              leading={item.icon}
                 key={item.id}
                 variant={"interactive"}
-                size={"sm"}
+                size={"md"}
                 selected={item.id === selectedMenuItem}
                 onClick={() => setSelectedMenuItem(item.id)}
               >
-                <ListItemIcon>{item.icon}</ListItemIcon>
+                {/* <ListItemIcon>{item.icon}</ListItemIcon> */}
                 <ListItemContent>{item.label}</ListItemContent>
 
               </ListItem>

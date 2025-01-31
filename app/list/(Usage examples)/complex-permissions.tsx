@@ -40,7 +40,7 @@ export default function ComplexPermissions() {
           <ListItem>
             <ListItemContent>Permission</ListItemContent>
             {roles.map(role => (
-              <ListItemAction key={role.id}>
+              <ListItemAction key={role.id} className='w-min'>
                 <div className="flex flex-col items-center">
                   <role.icon className="h-5 w-5" />
                   <span className="text-xs">{role.name}</span>
@@ -52,7 +52,7 @@ export default function ComplexPermissions() {
             <ListItem key={permission.id} size={"lg"}>
               <ListItemContent>{permission.name}</ListItemContent>
               {roles.map(role => (
-                <ListItemAction key={role.id}>
+                <ListItemAction key={role.id} className='flex '>
                   <Checkbox
                     checked={permission.roles.includes(role.id)}
                     onCheckedChange={() => togglePermission(permission.id, role.id)}

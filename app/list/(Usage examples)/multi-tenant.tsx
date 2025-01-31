@@ -23,7 +23,7 @@ export default function MultiTenantInterface() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 min-w-fit">
       <h1 className="text-2xl font-bold mb-4">Multi-Tenant Interface</h1>
       <List aria-label="Multi-Tenant Interface">
         <ListGroup>

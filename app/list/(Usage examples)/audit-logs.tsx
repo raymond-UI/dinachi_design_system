@@ -39,7 +39,7 @@ export default function AuditLog() {
   ];
 
   return (
-    <Card className="p">
+    <Card className="p-4">
       <h1 className="text-2xl font-bold mb-4">Audit Log</h1>
       <List aria-label="Audit Log" >
         <ListGroup >
