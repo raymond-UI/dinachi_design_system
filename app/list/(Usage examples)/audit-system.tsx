@@ -41,11 +41,15 @@ export default function AuditSystem() {
           <ListGroupTitle icon={<Activity />}>Audit Logs</ListGroupTitle>
           {filteredLogs.map(log => (
             <ListItem key={log.id}>
-              <ListItemContent>
-                <div className="font-medium">{log.action}</div>
-                <div className="text-sm text-muted-foreground">User: {log.user}</div>
-                <div className="text-sm text-muted-foreground">Time: {log.timestamp}</div>
-                <div className="text-sm text-muted-foreground">IP: {log.ip}</div>
+              <ListItemContent className='flex justify-between'>
+                <div className='flex flex-col'>
+                <span className=" font-medium">{log.action}</span>
+                <span className=" truncate text-sm text-muted-foreground">User: {log.user}</span>
+                </div>
+                <div className='flex flex-col'>
+                <span className="text-sm text-muted-foreground">Time: {log.timestamp}</span>
+                <span className="text-sm text-muted-foreground">IP: {log.ip}</span>
+                </div>
               </ListItemContent>
             </ListItem>
           ))}
