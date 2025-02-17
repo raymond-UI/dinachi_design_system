@@ -7,7 +7,7 @@ import {
   ListItemAction,
   // ListItemIcon,
   ListItemContent,
-} from "@/components/custom/list";
+} from "@/registry/list/list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

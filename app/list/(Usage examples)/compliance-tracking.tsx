@@ -7,7 +7,7 @@ import {
   ListItem,
   ListItemAction,
   ListItemContent,
-} from "@/components/custom/list";
+} from "@/registry/list/list";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {

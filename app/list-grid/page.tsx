@@ -8,7 +8,7 @@ import {
   ListItemContent,
   ListGroup,
   ListGroupTitle,
-} from "@/components/custom/list"; // Adjust the import path as necessary
+} from "@/registry/list/list"; // Adjust the import path as necessary
 import { Badge } from "@/components/ui/badge";
 import { motion } from "motion/react"
 import { Bot } from "lucide-react";

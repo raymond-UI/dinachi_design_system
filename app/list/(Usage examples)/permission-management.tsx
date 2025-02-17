@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { List, ListItem, ListItemContent, ListItemAction, ListGroup, ListGroupTitle } from '@/components/custom/list'
+import { List, ListItem, ListItemContent, ListItemAction, ListGroup, ListGroupTitle } from '@/registry/list/list'
 import { Switch } from '@/components/ui/switch'
 import { Lock } from 'lucide-react'
 

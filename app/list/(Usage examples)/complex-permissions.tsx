@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { List, ListItem, ListItemContent, ListItemAction, ListGroup, ListGroupTitle } from '@/components/custom/list'
+import { List, ListItem, ListItemContent, ListItemAction, ListGroup, ListGroupTitle } from '@/registry/list/list'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { Shield, User, FileText, Settings } from 'lucide-react'

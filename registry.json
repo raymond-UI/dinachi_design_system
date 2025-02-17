@@ -1,0 +1,29 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "name": "mzed-studio",
+    "homepage": "https://mzed.studio",
+    "items": [
+      {
+        "name": "list",
+        "type": "registry:component",
+        "title": "List Component",
+        "description": "A comprehensive list component for displaying items in a structured format.",
+        "dependencies": ["class-variance-authority", "lucide-react", "clsx", "tailwind-merge"],
+        "registryDependencies": [],
+        "author": "Mzed studio (https://mzed.studio) <raymond@mzed.studio>",
+        "tags": ["list", "menu-items", "component"],
+        "categories": ["component"],
+        "files": [
+          {
+            "path": "registry/list/list.tsx",
+            "type": "registry:component"
+          },
+          {
+            "path": "lib/utils.ts",
+            "type": "registry:lib"
+          }
+        ]
+      }
+    ]
+  }
+  

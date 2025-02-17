@@ -7,7 +7,7 @@ import {
   ListItemAction,
   ListGroup,
   ListGroupTitle,
-} from "@/components/custom/list";
+} from "@/registry/list/list";
 import {
   Mail,
   Trash2,

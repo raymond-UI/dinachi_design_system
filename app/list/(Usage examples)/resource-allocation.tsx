@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { List, ListItem, ListItemContent, ListItemAction, ListGroup, ListGroupTitle } from '@/components/custom/list'
+import { List, ListItem, ListItemContent, ListItemAction, ListGroup, ListGroupTitle } from '@/registry/list/list'
 import { Progress } from '@/components/ui/progress'
 import { Server } from 'lucide-react'
 

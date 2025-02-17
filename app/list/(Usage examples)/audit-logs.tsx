@@ -6,7 +6,7 @@ import {
   ListItemContent,
   ListGroup,
   ListGroupTitle,
-} from "@/components/custom/list";
+} from "@/registry/list/list";
 import { Card } from "@/components/ui/card";
 import { Activity } from "lucide-react";
 

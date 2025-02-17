@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { List, ListItem, ListItemContent, ListGroup, ListGroupTitle } from '@/components/custom/list'
+import { List, ListItem, ListItemContent, ListGroup, ListGroupTitle } from '@/registry/list/list'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Activity, Search, Filter } from 'lucide-react'
