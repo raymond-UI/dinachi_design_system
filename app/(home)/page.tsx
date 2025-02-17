@@ -6,53 +6,71 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const components = [
   {
     value: "list",
-    label: "List component",
+    label: "List",
     url: "/list",
   },
   {
     value: "list-grid",
-    label: "List Grid",
+    label: "Grid",
     url: "/list-grid",
-  },
-  {
-    value: "grid-list",
-    label: "Grid List",
-    url: "/grid-list",
-  },
-  {
-    value: "charts",
-    label: "charts",
-    url: "/charts",
   },
 ];
 
 export default function Home() {
   return (
-    <main className="container min-h-screen flex flex-col gap-8 row-start-2 items-center justify-center sm:items-start">
-      <h1 className="text-3xl font-bold text-center sm:text-left newh1">
-        Dinachi <br />
-        <span className="font-medium text-xl text-secondary-foreground">
-          Extended Shadcn component library
-        </span>{" "}
+    <main className="container max-w-2xl rounded mx-auto flex flex-col items-start justify-start sm:mt-[10dvh] pb-4">
+      <div className="mt-10 gap-2 flex flex-col ">
+      <Badge className="self-start">Work in progress</Badge>
+      <h1 className="text-3xl font-bold  ">
+      Dinachi design system
       </h1>
+      <p className="text-lg text-muted-foreground text-left">Beautifully designed components built with React, UI and Tailwind CSS.
+      </p>
+      </div>
+
+      {/* Components */}
+      <h2 className=" text-xl font-bold mt-10">Components</h2>
+
+      <div className="mt-4 border rounded p-4 bg-secondary/50 w-full">
+      <h3 className="text-primary font-bold">1. List component</h3>
+      <p>The list component is a versatile component that can be used to display a list of items. It can be used to display a list of items in a grid, menu items,  or a list.</p>
+
+      <div className="mt-4 space-y-1">
+        <span className="text-muted-foreground">Installation</span>
+       <div className="bg-primary/10 border border-primary/50 p-2  w-full rounded">
+      pnpm dlx shadcn@latest add https://dinachi.mzed.studio/public/r/list.json
+      </div>
+
+      </div>
+      <div className=" mt-4 space-y-1">
+        <span className="text-muted-foreground">Usage</span>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         {components.map((component) => (
           <Link href={component.url || "#"} key={component.value} passHref>
             <Card className=" hover:scale-105 transition-all p-4 cursor-pointer hover:bg-secondary">
-              <CardContent>
+              <CardContent className="p-0 m-0">
                 <CardTitle>{component.label}</CardTitle>
                 <CardDescription>
-                  Learn more about {component.label}.
+                  See example usage in a {component.label}.
                 </CardDescription>
               </CardContent>
             </Card>
           </Link>
         ))}
+        </div>
       </div>
+
+      <div className=" mt-4 space-y-1">
+      <span className="text-muted-foreground">Documentation</span>
+      <div className="bg-primary/10 border border-primary/50 p-2  w-full rounded">Coming soon!</div>
+      </div>
+      </div>
+
     </main>
   );
 }

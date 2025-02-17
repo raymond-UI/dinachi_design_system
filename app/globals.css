@@ -14,6 +14,10 @@ body {
   .customradius {
    border-radius: 10px;
   }
+
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+  }
 }
 
 @layer base {

@@ -1,18 +1,14 @@
 "use client";
 
-import React from "react";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   List,
   ListItem,
-  // ListItemIcon,
-  ListItemContent,
-  ListGroup,
-  ListGroupTitle,
-} from "@/registry/list/list"; // Adjust the import path as necessary
-import { Badge } from "@/components/ui/badge";
-import { motion } from "motion/react"
+  ListItemContent
+} from "@/registry/list/list";
 import { Bot } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { motion } from "motion/react";
 
 
 const ListGrid = () => {
@@ -79,7 +75,7 @@ const ListGrid = () => {
       <List
        aria-label="AI Capabilities"
       listRole={"list"}
-      // description="This is a description of the list"
+      description="This is a description of the list"
       isInteractive
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 h-auto"
       >
@@ -91,7 +87,6 @@ const ListGrid = () => {
             size={"sm"}
             className=" border-dotted border h-full"
           >
-            {/* <ListItemIcon>{term.icon}</ListItemIcon> */}
             <ListItemContent>{term.term}</ListItemContent>
           </ListItem>
         ))}

@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Funnel_Display } from "next/font/google";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const catamaran = Funnel_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-catamaran",
+  weight: "variable",
 });
 
 export const metadata: Metadata = {
@@ -24,9 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={``}>
+    <html lang="en" className={`${catamaran.variable}`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex justify-center items-center`}
+        className={` font-sans antialiased flex justify-center items-center p-2`}
       >
         {children}
       </body>
