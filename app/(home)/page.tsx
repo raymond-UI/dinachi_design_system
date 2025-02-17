@@ -1,3 +1,4 @@
+"use client"
 // app/page.tsx
 import Link from "next/link";
 import {
@@ -7,6 +8,9 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Copy } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 const components = [
   {
@@ -20,6 +24,18 @@ const components = [
     url: "/list-grid",
   },
 ];
+
+
+const handleCopy = () => {
+  navigator.clipboard.writeText("pnpm dlx shadcn@latest add https://dinachi.netlify.app/r/list.json");
+  
+  toast({
+    title: "Copied to clipboard",
+    description: "The command has been copied to your clipboard.",
+    duration: 3000,
+    
+  });
+}
 
 export default function Home() {
   return (
@@ -42,8 +58,11 @@ export default function Home() {
 
       <div className="mt-4 space-y-1">
         <span className="text-muted-foreground">Installation</span>
-       <div className="bg-primary/10 border border-primary/50 p-2  w-full rounded">
-      pnpm dlx shadcn@latest add https://dinachi.mzed.studio/public/r/list.json
+       <div className="relative bg-primary/10 border border-primary/50 p-2  w-full rounded">
+      pnpm dlx shadcn@latest add https://dinachi.netlify.app/r/list.json
+      <Button size={"icon"} variant={"ghost"} className="absolute right-0 top-0 " onClick={handleCopy}>
+      <Copy className="text-primary" />
+      </Button>
       </div>
 
       </div>

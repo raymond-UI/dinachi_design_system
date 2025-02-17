@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Funnel_Display } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const catamaran = Funnel_Display({
   subsets: ["latin"],
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body
         className={` font-sans antialiased flex justify-center items-center p-2`}
       >
+        <Toaster />
         {children}
       </body>
     </html>
